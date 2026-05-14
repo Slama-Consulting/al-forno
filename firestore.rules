@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Validation du schéma d'un document /avis
+    function isValidAvis(data) {
+      return data.keys().hasOnly(['id','clientName','visitDate','visitMoment',
+                                  'generalComment','reviews','timestamp','createdAt'])
+          && data.keys().hasAll(['clientName','visitDate','reviews','timestamp'])
+          && data.clientName is string && data.clientName.size() <= 80
+          && data.visitDate is string && data.visitDate.size() <= 30
+          && data.visitMoment is string && data.visitMoment.size() <= 10
+          && data.generalComment is string && data.generalComment.size() <= 2000
+          && data.reviews is list && data.reviews.size() <= 100
+          && data.timestamp is string && data.timestamp.size() <= 40
+          && data.id is int;
+    }
+
+    // Collection des avis client
+    // - create : public (anonyme) avec validation de schéma
+    // - read (get + list) : admin authentifié uniquement
+    // - update : jamais autorisé
+    // - delete : admin authentifié uniquement
+    match /avis/{doc} {
+      allow create: if isValidAvis(request.resource.data);
+      allow read, delete: if request.auth != null;
+      allow update: if false;
+    }
+
+    // Tout le reste : refusé par défaut
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
