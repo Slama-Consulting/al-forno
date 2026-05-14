@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Forno — La carte v2 · Composez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#241410; --ink-2:#3d2418; --mute:#8a7558;
+  --rosso:#a82424; --rosso-deep:#811919; --rosso-soft:#c43838;
+  --rosso-pale:#f6e4dd;
+  --cream:#f3e8c8; --cream-2:#ebe0b8; --cream-3:#d8c9a0; --paper:#faf2dc;
+  --vert:#1c4a2d; --vert-soft:#2a6841;
+  --ochre:#c4923a; --gold:#d8a020;
+  --logo:'Bebas Neue',sans-serif;
+  --cond:'Barlow Condensed',sans-serif;
+  --sans:'Barlow',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:repeating-linear-gradient(0deg,rgba(36,20,16,.02) 0 1px,transparent 1px 3px);
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:var(--cream);
+  border-bottom:1.5px solid var(--cream-3);
+}
+.topbar-inner{
+  max-width:1360px;margin:0 auto;padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand-mini{display:flex;align-items:center;gap:14px;text-decoration:none}
+.brand-mini-word{
+  font-family:var(--logo);font-size:30px;letter-spacing:.04em;color:var(--rosso);
+  line-height:1;white-space:nowrap;
+}
+.brand-mini-sub{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+.back{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);text-decoration:none;
+}
+.back:hover{color:var(--rosso)}
+
+/* ── HERO LOGO ── */
+.hero{
+  position:relative;z-index:1;
+  background:var(--rosso);color:var(--cream);
+  padding:64px 28px 56px;
+  text-align:center;
+  overflow:hidden;
+  border-bottom:1.5px solid var(--rosso-deep);
+}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 8% 92%, rgba(28,74,45,.4), transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(28,74,45,.25), transparent 30%);
+}
+.hero-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(243,232,200,.7);margin-bottom:18px;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{content:"";width:38px;height:1px;background:rgba(243,232,200,.4)}
+
+.logo-word{
+  font-family:var(--logo);
+  font-size:clamp(80px,15vw,180px);
+  line-height:.88;letter-spacing:.02em;
+  color:var(--cream);
+  text-shadow:0 2px 0 rgba(0,0,0,.04);
+  white-space:nowrap;
+}
+.logo-tag{
+  margin:14px auto 0;
+  display:inline-flex;align-items:center;gap:18px;
+  background:var(--cream);color:var(--vert);
+  padding:9px 24px;border-radius:2px;
+  font-family:var(--logo);font-size:clamp(15px,1.8vw,22px);letter-spacing:.28em;
+  flex-wrap:wrap;justify-content:center;
+}
+.logo-tag span{display:inline-block}
+.logo-tag .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--vert);
+  display:inline-block;
+}
+.hero-meta{
+  margin-top:22px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  color:rgba(243,232,200,.75);
+}
+.hero-meta b{color:var(--cream);font-weight:500}
+
+/* ── FORMULE BADGE ── */
+.formule{
+  position:absolute;top:24px;right:24px;
+  width:118px;height:118px;border-radius:50%;
+  background:#e8682a;color:var(--cream);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;line-height:1.1;
+  transform:rotate(-12deg);
+  box-shadow:0 8px 28px -10px rgba(0,0,0,.4);
+  font-family:var(--cond);font-weight:800;
+}
+.formule .ft{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(243,232,200,.85)}
+.formule .fp{font-family:var(--logo);font-size:42px;letter-spacing:.02em;margin:3px 0 1px;color:var(--cream)}
+.formule .fc{font-size:10px;letter-spacing:.1em;color:rgba(243,232,200,.85);text-transform:uppercase;line-height:1.3}
+@media(max-width:680px){.formule{top:auto;right:50%;bottom:-30px;transform:translateX(50%) rotate(-8deg);width:100px;height:100px}.formule .fp{font-size:34px}}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:48px 28px 80px}
+
+/* ── CATEGORY HEADER ── */
+.cat{margin-bottom:48px;break-inside:avoid}
+.cat-head{
+  display:flex;align-items:baseline;gap:18px;
+  padding-bottom:10px;margin-bottom:22px;
+  border-bottom:2px solid var(--rosso);
+}
+.cat-head h2{
+  font-family:var(--logo);
+  font-size:clamp(48px,5vw,72px);
+  line-height:.95;letter-spacing:.02em;
+  color:var(--rosso);
+}
+.cat-head h2.green{color:var(--vert)}
+.cat-head .count{
+  margin-left:auto;
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);
+}
+.cat-desc{
+  font-family:var(--cond);font-style:italic;font-weight:500;
+  font-size:15px;color:var(--ink-2);margin-top:-12px;margin-bottom:18px;letter-spacing:.01em;
+}
+
+/* ── GRID ── */
+.dishes{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+  gap:8px 28px;
+}
+.dishes.wide{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px 30px}
+.dish{
+  padding:11px 0;
+  border-bottom:1px dotted var(--cream-3);
+  display:grid;grid-template-columns:1fr auto;gap:6px 14px;
+  align-items:baseline;
+}
+.dish:last-child{border-bottom:none}
+.dish-row{display:flex;align-items:baseline;gap:8px;min-width:0}
+.dish-name{
+  font-family:var(--cond);font-weight:800;
+  font-size:18px;color:var(--ink);
+  text-transform:uppercase;letter-spacing:.03em;
+  line-height:1.1;white-space:nowrap;
+}
+.dish-leader{
+  flex:1;height:1px;
+  background:repeating-linear-gradient(90deg,var(--cream-3) 0 2px,transparent 2px 5px);
+  transform:translateY(-3px);
+  min-width:14px;
+}
+.dish-price{
+  font-family:var(--cond);font-weight:800;
+  font-size:17px;color:var(--rosso);
+  letter-spacing:.01em;white-space:nowrap;
+}
+.dish-price .e{font-family:var(--sans);font-weight:400;font-size:13px;color:var(--mute);margin-left:1px}
+.dish-desc{
+  grid-column:1 / -1;
+  font-family:var(--sans);font-weight:400;
+  font-size:12.5px;color:var(--ink-2);line-height:1.5;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+
+/* ── PIZZA SECTION (hero) ── */
+.pizza-block{
+  background:var(--paper);
+  border:1.5px solid var(--cream-3);border-radius:4px;
+  padding:32px 32px 24px;margin-bottom:48px;
+  position:relative;
+}
+.pizza-block .cat-head{margin-bottom:20px}
+.pizza-block .dishes{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:6px 32px}
+.pizza-supp{
+  margin-top:18px;padding-top:18px;
+  border-top:1px solid var(--cream-3);
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+  font-family:var(--cond);font-weight:600;font-size:14px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);
+}
+.pizza-supp .lbl{color:var(--rosso);font-weight:800}
+.pizza-supp .item b{color:var(--ink);font-weight:800;margin-right:2px}
+.pizza-supp .sep{color:var(--cream-3)}
+
+/* ── ROW LAYOUT (3 cols on desktop) ── */
+.row3{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:48px 36px;
+  margin-bottom:48px;
+}
+@media(max-width:1040px){.row3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.row3{grid-template-columns:1fr;gap:32px}}
+.row3 .cat{margin-bottom:0}
+.row3 .dishes{grid-template-columns:1fr;gap:0}
+
+.row2{
+  display:grid;grid-template-columns:1fr 1fr;gap:48px 36px;
+  margin-bottom:48px;
+}
+@media(max-width:780px){.row2{grid-template-columns:1fr;gap:32px}}
+.row2 .cat{margin-bottom:0}
+.row2 .dishes{grid-template-columns:1fr;gap:0}
+
+/* ── NOTES ── */
+.notes{
+  background:var(--ink);color:var(--cream);
+  border-radius:4px;padding:24px 28px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  margin-bottom:32px;
+}
+@media(max-width:680px){.notes{grid-template-columns:1fr}}
+.note{
+  font-family:var(--cond);font-weight:500;font-size:14px;
+  text-transform:uppercase;letter-spacing:.06em;
+  display:flex;align-items:baseline;gap:10px;
+}
+.note .star{color:var(--gold);font-family:var(--cond);font-weight:800;font-size:18px}
+
+/* ── INFOS FOOTER ── */
+.infos{
+  background:var(--paper);border:1.5px solid var(--cream-3);border-radius:4px;
+  padding:32px 32px 24px;margin-bottom:24px;
+}
+.infos-head{
+  font-family:var(--logo);font-size:36px;letter-spacing:.04em;color:var(--rosso);
+  margin-bottom:6px;
+}
+.infos-sub{
+  font-family:var(--cond);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--ink-2);margin-bottom:22px;
+}
+.infos-grid{
+  display:grid;grid-template-columns:1.4fr 1.4fr 2fr;gap:28px;
+}
+@media(max-width:900px){.infos-grid{grid-template-columns:1fr}}
+.info-block .lbl{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+  margin-bottom:8px;
+}
+.info-block .val{
+  font-family:var(--cond);font-weight:600;font-size:16px;color:var(--ink);
+  line-height:1.5;text-transform:uppercase;letter-spacing:.04em;
+}
+.info-block .val .phone{font-family:var(--logo);font-size:24px;color:var(--rosso);letter-spacing:.04em;display:block;margin-top:4px}
+.hours-row{
+  display:grid;grid-template-columns:auto 1fr;gap:0 18px;
+  font-family:var(--cond);font-size:14px;
+}
+.hours-row .day{font-weight:700;color:var(--rosso);text-transform:uppercase;letter-spacing:.06em}
+.hours-row .h{color:var(--ink);text-transform:uppercase;letter-spacing:.04em}
+
+/* ── DELIVERY CHIPS ── */
+.delivery{
+  display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;
+}
+.deli-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--cream);border:1px solid var(--cream-3);border-radius:3px;
+  padding:8px 14px;
+  font-family:var(--cond);font-weight:700;font-size:13px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink);
+}
+.deli-chip .pill{
+  display:inline-block;width:10px;height:10px;border-radius:50%;
+}
+.deli-chip.deliveroo .pill{background:#00ccbc}
+.deli-chip.uber .pill{background:#1a1a1a}
+
+/* ── BOTTOM FOOTER ── */
+.foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:18px;border-top:1px solid var(--cream-3);
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+  flex-wrap:wrap;gap:10px;
+}
+.foot .center{
+  font-family:var(--cond);font-style:italic;font-weight:600;font-size:13px;
+  letter-spacing:.04em;color:var(--ink-2);text-transform:none;
+}
+.foot .center b{color:var(--rosso);font-style:normal}
+
+@media(max-width:680px){
+  .hero{padding:48px 20px 40px}
+  .page{padding:32px 20px 60px}
+  .pizza-block{padding:24px 20px}
+  .infos{padding:24px 20px}
+}
+/* ── COMPOSE ── */
+.compose{
+  margin-top:28px;padding-top:26px;
+  border-top:1.5px dashed var(--rosso);
+}
+.compose-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-bottom:22px;
+}
+.compose-h{
+  font-family:var(--logo);font-size:clamp(28px,4vw,38px);letter-spacing:.04em;color:var(--vert);
+  line-height:.95;
+}
+.compose-h .accent{color:var(--rosso)}
+.compose-from{
+  font-family:var(--cond);font-weight:700;font-size:12px;
+  text-transform:uppercase;letter-spacing:.18em;
+  background:var(--vert);color:var(--cream);
+  padding:8px 16px;border-radius:2px;
+  display:inline-flex;align-items:baseline;gap:10px;
+}
+.compose-from b{font-family:var(--logo);font-weight:400;font-size:22px;letter-spacing:.02em;line-height:1}
+.compose-step{
+  display:grid;grid-template-columns:200px 1fr;gap:12px 22px;align-items:baseline;
+  padding:12px 0;border-bottom:1px dotted var(--cream-3);
+}
+.compose-step:last-child{border-bottom:none}
+@media(max-width:680px){.compose-step{grid-template-columns:1fr;gap:4px}}
+.compose-step-label{
+  font-family:var(--cond);font-weight:800;font-size:15px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink);
+  display:flex;flex-direction:column;gap:4px;
+}
+.compose-step-label .lbl{display:flex;align-items:center;gap:10px}
+.compose-step-label .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--rosso);color:var(--cream);
+  font-family:var(--logo);font-size:15px;line-height:1;flex-shrink:0;
+}
+.compose-step-label .price{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  color:var(--vert);font-weight:500;margin-left:34px;
+  text-transform:none;
+}
+.compose-step-label .price.free{color:var(--mute)}
+.compose-items{
+  display:flex;flex-wrap:wrap;gap:4px 14px;
+  font-family:var(--sans);font-weight:400;font-size:14px;color:var(--ink);line-height:1.65;
+  padding-top:2px;
+}
+.compose-items .it{position:relative;padding-right:14px;white-space:nowrap}
+.compose-items .it::after{
+  content:"·";position:absolute;right:3px;top:-1px;color:var(--cream-3);
+}
+.compose-items .it:last-child::after{content:none}
+.compose-items .it b{font-family:var(--cond);font-weight:800;color:var(--rosso);margin-left:4px;font-size:13px}
+
+@media print{
+  .topbar,.back,.foot{display:none}
+  body::before{display:none}
+  .hero{padding:32px 20px}
+  .logo-word{font-size:96px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand-mini" href="index.html">
+      <span class="brand-mini-word">AL FORNO</span>
+      <span class="brand-mini-sub">La carte v2 · Composez votre plat</span>
+    </a>
+    <a class="back" href="index.html">← Accueil</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="formule">
+    <div class="ft">Formule midi</div>
+    <div class="fp">11.90</div>
+    <div class="fc">Pizza<br>+ Boisson 33 cl</div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Trattoria napolitaine</div>
+    <h1 class="logo-word">AL FORNO</h1>
+    <div class="logo-tag">
+      <span>PIZZA</span><span class="dot"></span>
+      <span>PASTA</span><span class="dot"></span>
+      <span>PANUOZZO</span>
+    </div>
+    <div class="hero-meta">
+      Sur place <b>·</b> À emporter <b>·</b> En livraison <b>·</b> Halal
+    </div>
+  </div>
+</section>
+
+<main class="page">
+
+  <!-- ───── PIZZAS (le centre) ───── -->
+  <div class="pizza-block">
+    <div class="cat-head">
+      <h2 class="green">NOS PIZZAS</h2>
+      <span class="count">21 recettes · Pâte napolitaine</span>
+    </div>
+    <p class="cat-desc">Toutes nos pâtes sont préparées maison et cuites au feu de bois.</p>
+    <div class="dishes wide">
+      <div class="dish"><div class="dish-row"><span class="dish-name">Marinara</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, ail, origan, basilic frais, filet d'huile d'olive</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Marguerita</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, origan, basilic frais, filet d'huile d'olive</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Calzone</span><span class="dish-leader"></span></div><span class="dish-price">12.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, jambon*, champignons, œuf</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Napoli</span><span class="dish-leader"></span></div><span class="dish-price">12.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, anchois, câpres, olives</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Veggie</span><span class="dish-leader"></span></div><span class="dish-price">12.90<span class="e"> €</span></span><div class="dish-desc">Tomate, mozzarella, poivrons, oignons, champignons, tomates cerises, olives</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Pollo</span><span class="dish-leader"></span></div><span class="dish-price">12.90<span class="e"> €</span></span><div class="dish-desc">Crème fraîche, émincés de poulet, champignons</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">4 Saisons</span><span class="dish-leader"></span></div><span class="dish-price">12.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, olive, artichaut, champignons, jambon*</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Parmigiana</span><span class="dish-leader"></span></div><span class="dish-price">12.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, aubergines grillées, parmesan, basilic, huile d'olive</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Cheesy</span><span class="dish-leader"></span></div><span class="dish-price">13.90<span class="e"> €</span></span><div class="dish-desc">Crème, mozzarella, emmental, gorgonzola, chèvre, parmesan</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Goat</span><span class="dish-leader"></span></div><span class="dish-price">13.90<span class="e"> €</span></span><div class="dish-desc">Crème fraîche, mozzarella, chèvre, miel</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Orientale</span><span class="dish-leader"></span></div><span class="dish-price">13.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, poivrons, merguez, œuf</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Carbonara</span><span class="dish-leader"></span></div><span class="dish-price">13.90<span class="e"> €</span></span><div class="dish-desc">Crème, mozzarella fior di latte, bacon**, œuf</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Brooklyn</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, double pepperoni, origan</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Tuna</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, thon, oignons, olives, persillade</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Bresaola</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, bresaola, copeaux de parmesan</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Salmone</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, saumon fumé, citron, persillade</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Piccante</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, chorizo***, piment</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Al Forno</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, merguez, pepperoni, oignons, poivrons, piments</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Tartufo</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Crème de truffe, mozzarella, champignons</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Burrata</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Sauce tomate, mozzarella, roquette, tomates cerises, burrata, pesto</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Borsalino</span><span class="dish-leader"></span></div><span class="dish-price">14.90<span class="e"> €</span></span><div class="dish-desc">Crème de boursin, bœuf haché, pommes de terre</div></div>
+    </div>
+    <div class="pizza-supp">
+      <span class="lbl">Suppléments</span>
+      <span class="item"><b>Légumes</b>1.50 €</span><span class="sep">·</span>
+      <span class="item"><b>Viande</b>2.90 €</span><span class="sep">·</span>
+      <span class="item"><b>Fromage</b>2.00 €</span><span class="sep">·</span>
+      <span class="item"><b>Burrata</b>4.90 €</span>
+    </div>
+
+    <!-- ── COMPOSE PIZZA ── -->
+    <div class="compose">
+      <div class="compose-head">
+        <h3 class="compose-h">COMPOSEZ <span class="accent">VOTRE PIZZA</span></h3>
+        <span class="compose-from">À partir de<b>9.90 €</b></span>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">1</span>Sauce</span><span class="price free">Incluse · au choix</span></div>
+        <div class="compose-items">
+          <span class="it">Tomate</span>
+          <span class="it">Blanche (crème)</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">2</span>Viandes</span><span class="price">+ 1.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Jambon</span>
+          <span class="it">Poulet</span>
+          <span class="it">Pepperoni</span>
+          <span class="it">Merguez</span>
+          <span class="it">Chorizo</span>
+          <span class="it">Bacon</span>
+          <span class="it">Bresaola</span>
+          <span class="it">Bœuf haché</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">3</span>Poissons</span><span class="price">+ 2.00 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Thon</span>
+          <span class="it">Saumon fumé</span>
+          <span class="it">Anchois</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">4</span>Fromages</span><span class="price">+ 1.00 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Mozzarella</span>
+          <span class="it">Gorgonzola</span>
+          <span class="it">Chèvre</span>
+          <span class="it">Parmesan</span>
+          <span class="it">Emmental</span>
+          <span class="it">Taleggio</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">5</span>Légumes</span><span class="price">+ 0.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Champignons</span>
+          <span class="it">Oignons</span>
+          <span class="it">Poivrons</span>
+          <span class="it">Olives</span>
+          <span class="it">Tomates cerises</span>
+          <span class="it">Aubergines</span>
+          <span class="it">Artichaut</span>
+          <span class="it">Roquette</span>
+          <span class="it">Pommes de terre</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">6</span>Premium</span><span class="price">Au prix unitaire</span></div>
+        <div class="compose-items">
+          <span class="it">Burrata <b>+ 2.50 €</b></span>
+          <span class="it">Crème de truffe <b>+ 2.50 €</b></span>
+          <span class="it">Stracciatella <b>+ 2.50 €</b></span>
+          <span class="it">Œuf <b>+ 0.50 €</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── PASTA (full-width) ───── -->
+  <div class="pizza-block">
+    <div class="cat-head">
+      <h2>PASTA</h2>
+      <span class="count">9 plats · Pâtes fraîches</span>
+    </div>
+    <p class="cat-desc">Penne ou rigatoni, sauce maison, parmesan en finition.</p>
+    <div class="dishes wide">
+      <div class="dish"><div class="dish-row"><span class="dish-name">Mac N' Cheese</span><span class="dish-leader"></span></div><span class="dish-price">6.90<span class="e"> €</span></span><div class="dish-desc">Penne, crème de cheddar, mozzarella, emmental</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Arrabiata</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Penne, sauce tomate, piment, ail, huile d'olive</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Quattro Formaggi</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Rigatoni, crème fraîche, gorgonzola, chèvre, taleggio, parmesan</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Bolognese</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Penne, sauce tomate, bœuf mijoté, oignons, carottes, céleri</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Alfredo</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Penne, crème, émincé de poulet, champignons, parmesan</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Pesto</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Penne, pesto de basilic, tomates cerises</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Carbonara</span><span class="dish-leader"></span></div><span class="dish-price">11.90<span class="e"> €</span></span><div class="dish-desc">Rigatoni, crème, lardons**, jaune d'œuf, parmesan</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Tartufo</span><span class="dish-leader"></span></div><span class="dish-price">11.90<span class="e"> €</span></span><div class="dish-desc">Rigatoni, crème de truffe, huile d'olive, champignons</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Salmone</span><span class="dish-leader"></span></div><span class="dish-price">11.90<span class="e"> €</span></span><div class="dish-desc">Penne, crème, saumon fumé, persil, ail, parmesan</div></div>
+    </div>
+
+    <!-- ── COMPOSE PASTA ── -->
+    <div class="compose">
+      <div class="compose-head">
+        <h3 class="compose-h">COMPOSEZ <span class="accent">VOS PASTA</span></h3>
+        <span class="compose-from">À partir de<b>6.00 €</b></span>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">1</span>Pâte</span><span class="price free">Incluse · au choix</span></div>
+        <div class="compose-items">
+          <span class="it">Penne</span>
+          <span class="it">Rigatoni</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">2</span>Sauce</span><span class="price free">Incluse · au choix</span></div>
+        <div class="compose-items">
+          <span class="it">Tomate</span>
+          <span class="it">Crème</span>
+          <span class="it">Pesto de basilic</span>
+          <span class="it">Beurre &amp; ail</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">3</span>Viandes</span><span class="price">+ 1.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Poulet</span>
+          <span class="it">Lardons</span>
+          <span class="it">Bœuf mijoté</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">4</span>Poissons</span><span class="price">+ 2.00 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Thon</span>
+          <span class="it">Saumon fumé</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">5</span>Fromages</span><span class="price">+ 0.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Parmesan</span>
+          <span class="it">Mozzarella</span>
+          <span class="it">Gorgonzola</span>
+          <span class="it">Chèvre</span>
+          <span class="it">Taleggio</span>
+          <span class="it">Emmental</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">6</span>Légumes</span><span class="price">+ 0.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Champignons</span>
+          <span class="it">Tomates cerises</span>
+          <span class="it">Oignons</span>
+          <span class="it">Basilic frais</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">7</span>Premium</span><span class="price">Au prix unitaire</span></div>
+        <div class="compose-items">
+          <span class="it">Crème de truffe <b>+ 2.50 €</b></span>
+          <span class="it">Pesto de pistache <b>+ 2.50 €</b></span>
+          <span class="it">Stracciatella <b>+ 2.50 €</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── PANUOZZOS (full-width) ───── -->
+  <div class="pizza-block">
+    <div class="cat-head">
+      <h2>PANUOZZOS</h2>
+      <span class="count">8 sandwichs · Pain cuit au four</span>
+    </div>
+    <p class="cat-desc">Le sandwich napolitain : pain au levain cuit au four, garniture chaude.</p>
+    <div class="dishes wide">
+      <div class="dish"><div class="dish-row"><span class="dish-name">Italiano</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Salade, tomates, mozzarella, basilic, huile d'olive, pesto</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Parigi</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Jambon*, mozzarella, salade, tomates cerises</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Caesar Chicken</span><span class="dish-leader"></span></div><span class="dish-price">10.90<span class="e"> €</span></span><div class="dish-desc">Poulet frit, salade, mozzarella, copeaux de parmesan, sauce caesar</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Americano</span><span class="dish-leader"></span></div><span class="dish-price">10.90<span class="e"> €</span></span><div class="dish-desc">Steak du boucher, salade, tomates, oignon, cheddar, sauce burger</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Gusto</span><span class="dish-leader"></span></div><span class="dish-price">10.90<span class="e"> €</span></span><div class="dish-desc">Saumon, mozzarella, salade, tomates cerises, citron, câpres, stracciatella</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Pistacchio</span><span class="dish-leader"></span></div><span class="dish-price">10.90<span class="e"> €</span></span><div class="dish-desc">Mortadelle, mozzarella, salade, pesto de pistache, stracciatella, pistaches concassées</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Marsa</span><span class="dish-leader"></span></div><span class="dish-price">10.90<span class="e"> €</span></span><div class="dish-desc">Thon, mozzarella, salade, pomme de terre, olives, œuf, sauce spicy</div></div>
+      <div class="dish"><div class="dish-row"><span class="dish-name">Pastrami</span><span class="dish-leader"></span></div><span class="dish-price">11.90<span class="e"> €</span></span><div class="dish-desc">Chiffonnade de pastrami, mozzarella, salade, parmesan, tomates cerises</div></div>
+    </div>
+
+    <!-- ── COMPOSE PANUOZZO ── -->
+    <div class="compose">
+      <div class="compose-head">
+        <h3 class="compose-h">COMPOSEZ <span class="accent">VOTRE PANUOZZO</span></h3>
+        <span class="compose-from">À partir de<b>7.00 €</b></span>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">1</span>Sauce</span><span class="price free">Incluse · au choix</span></div>
+        <div class="compose-items">
+          <span class="it">Huile d'olive</span>
+          <span class="it">Pesto basilic</span>
+          <span class="it">Sauce Caesar</span>
+          <span class="it">Sauce burger</span>
+          <span class="it">Sauce spicy</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">2</span>Viandes</span><span class="price">+ 1.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Jambon</span>
+          <span class="it">Poulet (frit ou émincé)</span>
+          <span class="it">Mortadelle</span>
+          <span class="it">Pastrami</span>
+          <span class="it">Steak</span>
+          <span class="it">Pepperoni</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">3</span>Poissons</span><span class="price">+ 1.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Thon</span>
+          <span class="it">Saumon</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">4</span>Fromages</span><span class="price">+ 1.00 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Mozzarella</span>
+          <span class="it">Parmesan</span>
+          <span class="it">Cheddar</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">5</span>Légumes</span><span class="price">+ 0.50 € / pièce</span></div>
+        <div class="compose-items">
+          <span class="it">Salade</span>
+          <span class="it">Tomates cerises</span>
+          <span class="it">Oignon</span>
+          <span class="it">Olives</span>
+          <span class="it">Câpres</span>
+          <span class="it">Pomme de terre</span>
+        </div>
+      </div>
+
+      <div class="compose-step">
+        <div class="compose-step-label"><span class="lbl"><span class="num">6</span>Premium</span><span class="price">Au prix unitaire</span></div>
+        <div class="compose-items">
+          <span class="it">Stracciatella <b>+ 1.50 €</b></span>
+          <span class="it">Burrata <b>+ 1.50 €</b></span>
+          <span class="it">Pesto de pistache <b>+ 1.50 €</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── BURRATAS + SALADES + À PARTAGER ───── -->
+  <div class="row3">
+
+    <div class="cat">
+      <div class="cat-head"><h2>BURRATAS</h2><span class="count">3 plats</span></div>
+      <div class="dishes">
+        <div class="dish"><div class="dish-row"><span class="dish-name">Classica</span><span class="dish-leader"></span></div><span class="dish-price">7.90<span class="e"> €</span></span><div class="dish-desc">Salade, burrata, tomates cerises, huile d'olive, sauce balsamique</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Pesto</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Salade, burrata, tomates cerises, pesto, huile d'olive</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Tartufo</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Salade, burrata, huile à la crème de truffe</div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-head"><h2>SALADES</h2><span class="count">3 plats</span></div>
+      <div class="dishes">
+        <div class="dish"><div class="dish-row"><span class="dish-name">Verde</span><span class="dish-leader"></span></div><span class="dish-price">3.90<span class="e"> €</span></span><div class="dish-desc">Salade verte croquante</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Al Tonno</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Salade, filet de thon, tomates cerises, oignons rouges, olives</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Caesar</span><span class="dish-leader"></span></div><span class="dish-price">9.90<span class="e"> €</span></span><div class="dish-desc">Salade, tomates cerises, émincé de poulet pané, croûtons, Grana Padano</div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-head"><h2>À PARTAGER</h2><span class="count">4 plats</span></div>
+      <div class="dishes">
+        <div class="dish"><div class="dish-row"><span class="dish-name">Foccacia</span><span class="dish-leader"></span></div><span class="dish-price">5.90<span class="e"> €</span></span><div class="dish-desc">Pain cuit au four, huile d'olive, origan</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Foccacia Pomodoro</span><span class="dish-leader"></span></div><span class="dish-price">6.90<span class="e"> €</span></span><div class="dish-desc">Pain cuit au four, tomates cerises rôties, huile d'olive, origan, basilic</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Foccacia Tartufo</span><span class="dish-leader"></span></div><span class="dish-price">8.90<span class="e"> €</span></span><div class="dish-desc">Pain cuit au four, huile à la crème de truffe, basilic frais</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Cheesy Bread</span><span class="dish-leader"></span></div><span class="dish-price">6.90<span class="e"> €</span></span><div class="dish-desc">Pain cuit au four, mozzarella, beurre à l'ail, persil</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───── DESSERTS + BOISSONS ───── -->
+  <div class="row2">
+
+    <div class="cat">
+      <div class="cat-head"><h2>DESSERTS</h2><span class="count">4 douceurs</span></div>
+      <div class="dishes">
+        <div class="dish"><div class="dish-row"><span class="dish-name">Tiramisu</span><span class="dish-leader"></span></div><span class="dish-price">3.90<span class="e"> €</span></span><div class="dish-desc">Parfum au choix : café, pistache ou Nutella</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Panna Cotta</span><span class="dish-leader"></span></div><span class="dish-price">3.90<span class="e"> €</span></span><div class="dish-desc">Mangue ou fraise</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Glace Barattolino</span><span class="dish-leader"></span></div><span class="dish-price">3.90<span class="e"> €</span></span><div class="dish-desc">150 ml — Chocolat, café ou amarena (fruits rouges)</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Pizza Nutella</span><span class="dish-leader"></span></div><span class="dish-price">6.90<span class="e"> €</span></span><div class="dish-desc">La pizza qui termine en beauté</div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-head"><h2>BOISSONS</h2><span class="count">6 références</span></div>
+      <div class="dishes">
+        <div class="dish"><div class="dish-row"><span class="dish-name">Eau Bouteille</span><span class="dish-leader"></span></div><span class="dish-price">1.50<span class="e"> €</span></span><div class="dish-desc">50 cl</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Mole Cola</span><span class="dish-leader"></span></div><span class="dish-price">2.00<span class="e"> €</span></span><div class="dish-desc">33 cl</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Limonade Sicilienne</span><span class="dish-leader"></span></div><span class="dish-price">3.50<span class="e"> €</span></span><div class="dish-desc">27.5 cl — Limonata, aranciata rossa, mandarino verde</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">Estathe Pesca</span><span class="dish-leader"></span></div><span class="dish-price">2.00<span class="e"> €</span></span><div class="dish-desc">Canette 33 cl</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">San Pellegrino Eau</span><span class="dish-leader"></span></div><span class="dish-price">1.80<span class="e"> €</span></span><div class="dish-desc">Gazeuse 50 cl</div></div>
+        <div class="dish"><div class="dish-row"><span class="dish-name">San Pellegrino Boisson</span><span class="dish-leader"></span></div><span class="dish-price">2.00<span class="e"> €</span></span><div class="dish-desc">33 cl — Limonata, aranciata rossa, melograno &amp; arancia</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───── NOTES ───── -->
+  <div class="notes">
+    <div class="note"><span class="star">*</span><span>Jambon de dinde</span></div>
+    <div class="note"><span class="star">**</span><span>Bacon &amp; lardons de veau</span></div>
+    <div class="note"><span class="star">***</span><span>Chorizo de bœuf</span></div>
+  </div>
+
+  <!-- ───── INFOS PRATIQUES ───── -->
+  <div class="infos">
+    <div class="infos-head">NOUS TROUVER</div>
+    <div class="infos-sub">Sur place · À emporter · En livraison</div>
+    <div class="infos-grid">
+
+      <div class="info-block">
+        <div class="lbl">Adresse</div>
+        <div class="val">
+          14 rue René Brûlay<br>
+          78500 Sartrouville
+          <span class="phone">09 74 97 28 21</span>
+        </div>
+        <div class="delivery">
+          <span class="deli-chip deliveroo"><span class="pill"></span>Deliveroo</span>
+          <span class="deli-chip uber"><span class="pill"></span>Uber Eats</span>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="lbl">Horaires d'ouverture</div>
+        <div class="hours-row">
+          <span class="day">Lun → Jeu</span><span class="h">11:30–14:30 · 18:00–23:00</span>
+          <span class="day">Vendredi</span><span class="h">18:00–23:00</span>
+          <span class="day">Samedi</span><span class="h">11:30–14:30 · 18:00–23:00</span>
+          <span class="day">Dimanche</span><span class="h">11:30–14:30 · 18:00–23:00</span>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="lbl">Bon à savoir</div>
+        <div class="val" style="font-weight:500;letter-spacing:.02em;line-height:1.6;text-transform:none">
+          Toutes les viandes proposées sont <b style="color:var(--rosso)">halal</b>. La pâte est préparée maison et cuite au feu de bois. Les pâtes sont fraîches.
+        </div>
+        <div style="margin-top:14px">
+          <a href="avis.html" style="display:inline-block;background:var(--rosso);color:var(--cream);padding:11px 22px;border-radius:3px;text-decoration:none;font-family:var(--cond);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.18em">Donner mon avis →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>© Al Forno — Sartrouville</span>
+    <span class="center">Cuit au feu de bois <b>·</b> Servi avec le cœur</span>
+    <span>v.2026</span>
+  </div>
+
+</main>
+
+</body>
+</html>
