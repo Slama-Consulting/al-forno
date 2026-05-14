@@ -175,7 +175,6 @@
         </div>
         <div id="qr-canvas"></div>
         <div class="qr-cta"><span>📲</span> Scannez pour donner votre avis</div>
-        <div class="qr-url-display" id="qr-url-display"></div>
       </div>
 
       <!-- Actions -->
@@ -226,7 +225,6 @@ function generateQR() {
     correctLevel: QRCode.CorrectLevel.H
   });
 
-  document.getElementById('qr-url-display').textContent = url;
   document.getElementById('qr-output').style.display = 'block';
   document.getElementById('qr-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -269,11 +267,6 @@ function downloadQR() {
     ctx.fillStyle = '#1A1208';
     ctx.font = 'bold 16px Arial';
     ctx.fillText('📲 Scannez pour donner votre avis', out.width/2, 322);
-
-    ctx.fillStyle = '#B0A090';
-    ctx.font = '10px Arial';
-    const shortURL = currentURL.length > 45 ? currentURL.substring(0,42)+'...' : currentURL;
-    ctx.fillText(shortURL, out.width/2, 345);
 
     // Bottom line
     ctx.fillStyle = '#8B1A1A';
