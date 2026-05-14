@@ -82,6 +82,12 @@
   .btn-copy:hover { border-color:var(--rouge); color:var(--rouge); }
   .btn-action .icon { margin-right:8px; }
 
+  /* Target selector */
+  .target-row { display:flex; gap:10px; margin-bottom:14px; }
+  .target-btn { flex:1; background:var(--creme); border:2px solid var(--creme-fonce); border-radius:6px; padding:12px 14px; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--texte); cursor:pointer; transition:all 0.2s; }
+  .target-btn:hover { border-color:var(--rouge); color:var(--rouge); }
+  .target-btn.active { background:var(--rouge); border-color:var(--rouge); color:white; }
+
   .info-box { background:rgba(45,90,39,0.07); border:1.5px solid rgba(45,90,39,0.2); border-radius:8px; padding:14px 16px; font-size:13px; color:#2D5A27; margin-top:8px; }
   .info-box strong { font-weight:600; }
 
@@ -153,11 +159,16 @@
   <!-- URL input -->
   <div class="url-section">
     <h2>🔗 Génère ton QR Code</h2>
-    <p style="font-size:13px;color:#6B5744;margin-bottom:16px;">Entre l'URL de ta page GitHub Pages ci-dessous :</p>
+    <p style="font-size:13px;color:#6B5744;margin-bottom:12px;">Choisis la cible du QR code :</p>
+    <div class="target-row">
+      <button type="button" class="target-btn active" data-target="avis" onclick="selectTarget('avis')">📝 Avis client</button>
+      <button type="button" class="target-btn" data-target="menu" onclick="selectTarget('menu')">🍕 Menu</button>
+    </div>
+    <p style="font-size:13px;color:#6B5744;margin-bottom:16px;">URL utilisée :</p>
     <div class="url-row">
       <input class="url-input" id="url-input" type="text"
-        placeholder="https://ton-username.github.io/alforno-avis/avis.html"
-        value="">
+        placeholder="https://slama-consulting.github.io/al-forno/avis.html"
+        value="https://slama-consulting.github.io/al-forno/avis.html">
       <button class="btn-gen" onclick="generateQR()">Générer →</button>
     </div>
   </div>
@@ -174,7 +185,7 @@
           <div class="qr-sub">Sartrouville</div>
         </div>
         <div id="qr-canvas"></div>
-        <div class="qr-cta"><span>📲</span> Scannez pour donner votre avis</div>
+        <div class="qr-cta" id="qr-cta"><span>📲</span> Scannez pour donner votre avis</div>
       </div>
 
       <!-- Actions -->
@@ -203,6 +214,29 @@
 
 <script>
 let currentURL = '';
+let currentTarget = 'avis';
+
+const TARGETS = {
+  avis: {
+    url: 'https://slama-consulting.github.io/al-forno/avis.html',
+    cta: '📲 Scannez pour donner votre avis',
+    file: 'alforno-qrcode-avis-4k.png'
+  },
+  menu: {
+    url: 'https://slama-consulting.github.io/al-forno/menu2.html',
+    cta: '📲 Scannez pour consulter le menu',
+    file: 'alforno-qrcode-menu-4k.png'
+  }
+};
+
+function selectTarget(target) {
+  currentTarget = target;
+  document.querySelectorAll('.target-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.target === target);
+  });
+  document.getElementById('url-input').value = TARGETS[target].url;
+  document.getElementById('qr-cta').innerHTML = '<span>📲</span> ' + TARGETS[target].cta.replace('📲 ', '');
+}
 
 function generateQR() {
   const url = document.getElementById('url-input').value.trim();
@@ -284,7 +318,7 @@ function downloadQR() {
     // CTA
     ctx.fillStyle = '#1A1208';
     ctx.font = 'bold 16px Arial';
-    ctx.fillText('📲 Scannez pour donner votre avis', W/2, 322);
+    ctx.fillText(TARGETS[currentTarget].cta, W/2, 322);
 
     // Bottom line
     ctx.fillStyle = '#8B1A1A';
@@ -295,7 +329,7 @@ function downloadQR() {
     ctx.fillText('Merci pour votre visite !', W/2, 400);
 
     const link = document.createElement('a');
-    link.download = 'alforno-qrcode-4k.png';
+    link.download = TARGETS[currentTarget].file;
     link.href = out.toDataURL('image/png');
     link.click();
   }, 300);
