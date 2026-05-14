@@ -98,9 +98,113 @@
     .qr-layout { grid-template-columns:1fr; max-width:320px; margin:40px auto; }
     .qr-actions { display:none !important; }
   }
+
+  /* ── LOGIN OVERLAY (Firebase Auth, partagé avec dashboard.html) ── */
+  #auth-overlay{
+    position:fixed; inset:0; z-index:1000;
+    background:var(--creme);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .auth-card{
+    position:relative;
+    background:white;
+    border:1.5px solid var(--creme-fonce);
+    border-radius:12px;
+    padding:36px 32px;
+    max-width:400px; width:100%;
+    box-shadow:0 30px 60px -30px rgba(139,26,26,.25);
+  }
+  .auth-card::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:var(--rouge); border-radius:12px 0 0 12px;
+  }
+  .auth-brand{
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:32px; color:var(--rouge); text-transform:uppercase; letter-spacing:-0.5px;
+    line-height:1; margin-bottom:6px;
+  }
+  .auth-sub{
+    font-family:'Barlow Condensed',sans-serif; font-weight:700;
+    font-size:11px; letter-spacing:2.5px; text-transform:uppercase;
+    color:#9B8470; margin-bottom:24px;
+  }
+  .auth-title{
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:24px; color:var(--texte); text-transform:uppercase;
+    letter-spacing:-0.3px; margin-bottom:20px;
+  }
+  .auth-title b{ color:var(--rouge); font-weight:800; }
+  .auth-field{ margin-bottom:14px; }
+  .auth-field label{
+    display:block;
+    font-family:'Barlow Condensed',sans-serif; font-weight:700;
+    font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:#9B8470; margin-bottom:6px;
+  }
+  .auth-field input{
+    width:100%;
+    background:var(--creme); border:2px solid var(--creme-fonce); border-radius:6px;
+    padding:12px 14px;
+    font-family:'Barlow',sans-serif; font-size:14px; color:var(--texte);
+    outline:none; transition:border-color .2s;
+  }
+  .auth-field input:focus{ border-color:var(--rouge); }
+  .auth-btn{
+    width:100%; margin-top:6px;
+    background:var(--rouge); color:white; border:none;
+    padding:13px 28px; border-radius:6px;
+    font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase;
+    cursor:pointer; transition:all .2s;
+  }
+  .auth-btn:hover{ background:#B22222; transform:translateY(-1px); }
+  .auth-btn[disabled]{ opacity:.5; cursor:wait; transform:none; }
+  .auth-error{
+    display:none; margin-top:12px;
+    font-family:'Barlow Condensed',sans-serif; font-weight:600;
+    font-size:13px; color:var(--rouge); letter-spacing:.3px;
+  }
+  .auth-error.on{ display:block; }
+  body.auth-locked{ overflow:hidden; }
+  body.auth-locked .container{ visibility:hidden; }
+
+  /* Bouton Déconnexion en haut à droite */
+  .topbar-logout{
+    position:fixed; top:16px; right:16px; z-index:50;
+    background:white; color:var(--texte);
+    border:2px solid var(--creme-fonce); border-radius:6px;
+    padding:10px 16px;
+    font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700;
+    letter-spacing:1.5px; text-transform:uppercase;
+    cursor:pointer; transition:all .2s;
+  }
+  .topbar-logout:hover{ border-color:var(--rouge); color:var(--rouge); }
 </style>
 </head>
-<body>
+<body class="auth-locked">
+
+<!-- ── LOGIN OVERLAY (Firebase Auth, même session que dashboard.html) ── -->
+<div id="auth-overlay">
+  <form class="auth-card" id="auth-form" autocomplete="on">
+    <div class="auth-brand">🍕 Al Forno</div>
+    <div class="auth-sub">QR Generator · Accès privé</div>
+    <h2 class="auth-title">Connexion <b>admin</b></h2>
+    <div class="auth-field">
+      <label for="auth-email">Email</label>
+      <input type="email" id="auth-email" autocomplete="username" required>
+    </div>
+    <div class="auth-field">
+      <label for="auth-pass">Mot de passe</label>
+      <input type="password" id="auth-pass" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="auth-btn" id="auth-submit">Se connecter →</button>
+    <div class="auth-error" id="auth-error"></div>
+  </form>
+</div>
+
+<button type="button" class="topbar-logout" id="btn-logout" style="display:none">Déconnexion</button>
+
 <div class="container">
 
   <h1>🍕 Générateur QR Code</h1>
@@ -223,7 +327,7 @@ const TARGETS = {
     file: 'alforno-qrcode-avis-4k.png'
   },
   menu: {
-    url: 'https://slama-consulting.github.io/al-forno/menu2.html',
+    url: 'https://slama-consulting.github.io/al-forno/menu.html',
     cta: '📲 Scannez pour consulter le menu',
     file: 'alforno-qrcode-menu-4k.png'
   }
@@ -343,6 +447,71 @@ function copyURL() {
     setTimeout(() => btn.innerHTML = orig, 2000);
   });
 }
+</script>
+
+<!-- ── Firebase Auth (même session partagée que dashboard.html via Firebase Auth) ── -->
+<script type="module">
+  import { auth } from './firebase-config.js';
+  import {
+    onAuthStateChanged, signInWithEmailAndPassword, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  const overlay   = document.getElementById('auth-overlay');
+  const form      = document.getElementById('auth-form');
+  const emailEl   = document.getElementById('auth-email');
+  const passEl    = document.getElementById('auth-pass');
+  const submitBtn = document.getElementById('auth-submit');
+  const errEl     = document.getElementById('auth-error');
+  const logoutBtn = document.getElementById('btn-logout');
+
+  function showError(msg) { errEl.textContent = msg; errEl.classList.add('on'); }
+  function clearError()   { errEl.textContent = '';  errEl.classList.remove('on'); }
+
+  function showApp() {
+    overlay.style.display = 'none';
+    document.body.classList.remove('auth-locked');
+    if (logoutBtn) logoutBtn.style.display = '';
+  }
+  function showLogin() {
+    overlay.style.display = 'flex';
+    document.body.classList.add('auth-locked');
+    if (logoutBtn) logoutBtn.style.display = 'none';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+    submitBtn.disabled = true;
+    try {
+      await signInWithEmailAndPassword(auth, emailEl.value.trim(), passEl.value);
+    } catch (err) {
+      const code = err && err.code ? err.code : '';
+      let msg = 'Connexion impossible.';
+      if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+        msg = 'Email ou mot de passe incorrect.';
+      } else if (code === 'auth/invalid-email') {
+        msg = 'Email invalide.';
+      } else if (code === 'auth/too-many-requests') {
+        msg = 'Trop de tentatives. Réessayez plus tard.';
+      } else if (code === 'auth/network-request-failed') {
+        msg = 'Problème réseau.';
+      }
+      showError(msg);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      try { await signOut(auth); } catch (e) { console.warn('signOut failed', e); }
+    });
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) { clearError(); passEl.value = ''; showApp(); }
+    else      { showLogin(); }
+  });
 </script>
 </body>
 </html>

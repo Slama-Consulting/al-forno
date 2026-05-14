@@ -422,6 +422,21 @@ textarea{resize:vertical;min-height:90px;font-family:var(--sans)}
   </div>
 </main>
 
+<!-- Firebase Firestore (module ES, expose une fonction globale pour le script classique ci-dessous) -->
+<script type="module">
+  import { db } from './firebase-config.js';
+  import { collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  // Écrit un avis dans Firestore. Renvoie une Promise — l'appelant gère le fallback localStorage.
+  window.firestoreAddAvis = async function(avisDoc) {
+    return addDoc(collection(db, 'avis'), {
+      ...avisDoc,
+      createdAt: serverTimestamp()
+    });
+  };
+</script>
+
 <script>
 // ── MENU DATA ─────────────────────────────────────────
 const MENU = {
@@ -605,8 +620,7 @@ function submitForm() {
   });
   if (!ok) { alert('Notez tous vos plats avant d\'envoyer.'); return; }
 
-  const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  all.push({
+  const avisDoc = {
     id: Date.now(),
     clientName: document.getElementById('f-name').value.trim() || 'Anonyme',
     visitDate:  document.getElementById('f-date').value || new Date().toISOString().split('T')[0],
@@ -614,8 +628,21 @@ function submitForm() {
     generalComment: document.getElementById('f-comment').value.trim(),
     reviews,
     timestamp: new Date().toISOString()
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  };
+
+  // Écriture localStorage (mode offline / secours) — toujours faite
+  try {
+    const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    all.push(avisDoc);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  } catch(e) { console.warn('localStorage failed', e); }
+
+  // Écriture Firestore (best-effort, non bloquante)
+  if (typeof window.firestoreAddAvis === 'function') {
+    window.firestoreAddAvis(avisDoc).catch(err => {
+      console.warn('Firestore write failed (avis sauvé en local) :', err);
+    });
+  }
 
   document.getElementById('form-wrap').style.display = 'none';
   document.querySelector('.progress-wrap').style.display = 'none';

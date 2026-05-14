@@ -356,9 +356,102 @@ body::before{
   .section-head{padding:0 16px}
   .main{padding:0 16px 60px}
 }
+
+/* ── LOGIN OVERLAY (Firebase Auth) ── */
+#auth-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+#auth-overlay::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(0deg,rgba(26,15,10,.018) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply;
+}
+.auth-card{
+  position:relative;z-index:1;
+  background:var(--paper);
+  border:1px solid var(--cream-3);border-radius:3px;
+  padding:44px 40px;max-width:420px;width:100%;
+  box-shadow:0 30px 60px -30px rgba(89,15,15,.25);
+}
+.auth-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rosso);
+}
+.auth-brand{
+  font-family:var(--logo);font-size:36px;letter-spacing:.04em;color:var(--rosso);
+  line-height:1;text-transform:uppercase;margin-bottom:6px;
+}
+.auth-sub{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:28px;
+}
+.auth-title{
+  font-family:var(--logo);font-weight:400;
+  font-size:42px;line-height:1;color:var(--ink);letter-spacing:.02em;
+  text-transform:uppercase;margin-bottom:24px;
+}
+.auth-title b{color:var(--rosso)}
+.auth-field{margin-bottom:16px}
+.auth-field label{
+  display:block;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:8px;
+}
+.auth-field input{
+  width:100%;background:var(--cream);
+  border:1px solid var(--cream-3);border-radius:3px;
+  padding:14px 16px;
+  font-family:var(--sans);font-size:15px;color:var(--ink);
+  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.auth-field input:focus{
+  border-color:var(--rosso);background:white;
+  box-shadow:0 0 0 3px rgba(178,31,31,.1);
+}
+.auth-btn{
+  width:100%;margin-top:8px;
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  background:var(--rosso);color:var(--paper);
+  border:none;border-radius:3px;padding:16px 28px;cursor:pointer;
+  transition:all .2s;
+}
+.auth-btn:hover{background:var(--rosso-deep);transform:translateY(-1px);box-shadow:0 12px 30px -12px rgba(89,15,15,.6)}
+.auth-btn[disabled]{opacity:.5;cursor:wait;transform:none}
+.auth-error{
+  display:none;margin-top:14px;
+  font-family:var(--cond);font-weight:600;font-size:14px;color:var(--rosso);
+  letter-spacing:.02em;
+}
+.auth-error.on{display:block}
+body.auth-locked{overflow:hidden}
+body.auth-locked .topbar,
+body.auth-locked .page-head,
+body.auth-locked .section-head,
+body.auth-locked .main{visibility:hidden}
 </style>
 </head>
-<body>
+<body class="auth-locked">
+
+<!-- ── LOGIN OVERLAY (Firebase Auth, bloquant tant que non authentifié) ── -->
+<div id="auth-overlay">
+  <form class="auth-card" id="auth-form" autocomplete="on">
+    <div class="auth-brand">AL FORNO</div>
+    <div class="auth-sub">Tableau de bord · Accès privé</div>
+    <h2 class="auth-title">Connexion <b>admin</b></h2>
+    <div class="auth-field">
+      <label for="auth-email">Email</label>
+      <input type="email" id="auth-email" autocomplete="username" required>
+    </div>
+    <div class="auth-field">
+      <label for="auth-pass">Mot de passe</label>
+      <input type="password" id="auth-pass" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="auth-btn" id="auth-submit">Se connecter →</button>
+    <div class="auth-error" id="auth-error"></div>
+  </form>
+</div>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -376,6 +469,7 @@ body::before{
       </div>
       <button class="btn-top" onclick="loadDemo()">Démo</button>
       <button class="btn-top solid" onclick="exportCSV()">↓ Export CSV</button>
+      <button class="btn-top" id="btn-logout" type="button">Déconnexion</button>
     </div>
   </div>
 </header>
@@ -461,7 +555,11 @@ const CAT_COLORS={"Pizzas":"#b21f1f","Pasta":"#c4923a","Panuozzos":"#a07720","Bu
 const PERIOD_LBL={day:"Aujourd'hui",week:"Cette semaine",month:"Ce mois",year:"Cette année",all:"Toute l'histoire"};
 
 let period='week';
-function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function load(){
+  // Priorité : données live Firestore (mises à jour via onSnapshot) ; fallback : localStorage (offline).
+  if (Array.isArray(window.__avisData)) return window.__avisData;
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}
+}
 function save(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}
 
 function filterPeriod(data,p){
@@ -584,7 +682,137 @@ function loadDemo(){
   }
   save(demo);render();
 }
-render();
+// L'appel render() initial est déclenché par le module Firebase Auth ci-dessous,
+// une fois que l'utilisateur est authentifié et que onSnapshot a fourni les données.
+</script>
+
+<!-- ── Firebase Auth + Firestore live updates (module ES) ── -->
+<script type="module">
+  import { auth, db } from './firebase-config.js';
+  import {
+    onAuthStateChanged, signInWithEmailAndPassword, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import {
+    collection, onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const overlay   = document.getElementById('auth-overlay');
+  const form      = document.getElementById('auth-form');
+  const emailEl   = document.getElementById('auth-email');
+  const passEl    = document.getElementById('auth-pass');
+  const submitBtn = document.getElementById('auth-submit');
+  const errEl     = document.getElementById('auth-error');
+  const logoutBtn = document.getElementById('btn-logout');
+
+  let unsubAvis = null;
+
+  function showError(msg) {
+    errEl.textContent = msg;
+    errEl.classList.add('on');
+  }
+  function clearError() {
+    errEl.textContent = '';
+    errEl.classList.remove('on');
+  }
+
+  function showApp() {
+    overlay.style.display = 'none';
+    document.body.classList.remove('auth-locked');
+  }
+  function showLogin() {
+    overlay.style.display = 'flex';
+    document.body.classList.add('auth-locked');
+    // Reset cache live + revert au localStorage pour le prochain login
+    window.__avisData = undefined;
+  }
+
+  function subscribeAvis() {
+    if (unsubAvis) return;
+    unsubAvis = onSnapshot(
+      collection(db, 'avis'),
+      snap => {
+        // Adapte les documents Firestore au format attendu par render() / aggregate().
+        const data = [];
+        snap.forEach(doc => {
+          const d = doc.data();
+          if (!Array.isArray(d.reviews)) return; // sécurité : doc malformé ignoré
+          data.push({
+            id: d.id || doc.id,
+            clientName: d.clientName || 'Anonyme',
+            visitDate:  d.visitDate  || new Date().toISOString().split('T')[0],
+            visitMoment: d.visitMoment || '',
+            generalComment: d.generalComment || '',
+            reviews: d.reviews,
+            timestamp: d.timestamp || (d.createdAt && d.createdAt.toDate
+              ? d.createdAt.toDate().toISOString()
+              : new Date().toISOString())
+          });
+        });
+        window.__avisData = data;
+        if (typeof window.render === 'function') window.render();
+      },
+      err => {
+        console.warn('Firestore onSnapshot error :', err);
+        // Fallback : utilise localStorage seul
+        window.__avisData = undefined;
+        if (typeof window.render === 'function') window.render();
+      }
+    );
+  }
+  function unsubscribeAvis() {
+    if (unsubAvis) { unsubAvis(); unsubAvis = null; }
+  }
+
+  // Soumission du formulaire de login
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+    submitBtn.disabled = true;
+    try {
+      await signInWithEmailAndPassword(auth, emailEl.value.trim(), passEl.value);
+      // onAuthStateChanged prendra le relais.
+    } catch (err) {
+      const code = err && err.code ? err.code : '';
+      let msg = 'Connexion impossible.';
+      if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+        msg = 'Email ou mot de passe incorrect.';
+      } else if (code === 'auth/invalid-email') {
+        msg = 'Email invalide.';
+      } else if (code === 'auth/too-many-requests') {
+        msg = 'Trop de tentatives. Réessayez plus tard.';
+      } else if (code === 'auth/network-request-failed') {
+        msg = 'Problème réseau.';
+      }
+      showError(msg);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  // Bouton Déconnexion
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      try { await signOut(auth); } catch (e) { console.warn('signOut failed', e); }
+    });
+  }
+
+  // État d'authentification
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      clearError();
+      passEl.value = '';
+      showApp();
+      subscribeAvis();
+      // Premier rendu immédiat (localStorage en attendant le snapshot).
+      if (typeof window.render === 'function') window.render();
+    } else {
+      unsubscribeAvis();
+      showLogin();
+    }
+  });
+
+  // Note : `render` (déclaré comme function declaration dans le script classique au-dessus)
+  // est déjà accessible via `window.render`. On y accède toujours via window.* depuis ce module.
 </script>
 </body>
 </html>
