@@ -231,53 +231,71 @@ function generateQR() {
 
 function downloadQR() {
   setTimeout(() => {
-    const canvas = document.querySelector('#qr-canvas canvas');
-    if (!canvas) { alert('QR Code non généré'); return; }
+    if (!currentURL) { alert('QR Code non généré'); return; }
 
-    // Create a combined canvas with branding
+    // High-resolution scale factor: logical 340x440 -> 4080x5280 (>4K)
+    const SCALE = 12;
+    const W = 340, H = 440;
+
+    // Re-render QR at native high resolution (avoids upscaling blur)
+    const qrHolder = document.createElement('div');
+    new QRCode(qrHolder, {
+      text: currentURL,
+      width: 200 * SCALE,
+      height: 200 * SCALE,
+      colorDark: '#1A1208',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    const hiResQR = qrHolder.querySelector('canvas');
+
+    // Combined output canvas
     const out = document.createElement('canvas');
-    out.width = 340;
-    out.height = 440;
+    out.width = W * SCALE;
+    out.height = H * SCALE;
     const ctx = out.getContext('2d');
+    ctx.scale(SCALE, SCALE);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Background
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.fillRect(0, 0, W, H);
 
     // Border
     ctx.strokeStyle = '#E8E0D0';
     ctx.lineWidth = 3;
-    ctx.roundRect(4, 4, out.width-8, out.height-8, 12);
+    ctx.roundRect(4, 4, W-8, H-8, 12);
     ctx.stroke();
 
     // Restaurant name
     ctx.fillStyle = '#8B1A1A';
     ctx.font = 'bold 36px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('🍕 AL FORNO', out.width/2, 52);
+    ctx.fillText('🍕 AL FORNO', W/2, 52);
 
     ctx.fillStyle = '#9B8470';
     ctx.font = '13px Arial';
-    ctx.fillText('SARTROUVILLE', out.width/2, 74);
+    ctx.fillText('SARTROUVILLE', W/2, 74);
 
-    // QR
-    ctx.drawImage(canvas, 70, 90, 200, 200);
+    // QR (drawn at logical size, source is hi-res for crisp scaling)
+    ctx.drawImage(hiResQR, 70, 90, 200, 200);
 
     // CTA
     ctx.fillStyle = '#1A1208';
     ctx.font = 'bold 16px Arial';
-    ctx.fillText('📲 Scannez pour donner votre avis', out.width/2, 322);
+    ctx.fillText('📲 Scannez pour donner votre avis', W/2, 322);
 
     // Bottom line
     ctx.fillStyle = '#8B1A1A';
-    ctx.fillRect(20, 370, out.width-40, 3);
+    ctx.fillRect(20, 370, W-40, 3);
 
     ctx.fillStyle = '#9B8470';
     ctx.font = '11px Arial';
-    ctx.fillText('Merci pour votre visite !', out.width/2, 400);
+    ctx.fillText('Merci pour votre visite !', W/2, 400);
 
     const link = document.createElement('a');
-    link.download = 'alforno-qrcode.png';
+    link.download = 'alforno-qrcode-4k.png';
     link.href = out.toDataURL('image/png');
     link.click();
   }, 300);
