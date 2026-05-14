@@ -3,182 +3,462 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al Forno — Dashboard</title>
+<title>Al Forno — Tableau de bord</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Barlow:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --rouge:#C0392B;--rouge-vif:#E74C3C;--rouge-pale:#FDECEA;
-  --creme:#FAF7F2;--creme-b:#EDE5D8;--creme-c:#E2D8CA;
-  --blanc:#FFFFFF;--texte:#2C1A0E;--gris:#8A7060;
-  --vert:#27AE60;--or:#E67E22;
+  --ink:#241410; --ink-2:#3d2418; --mute:#8a7558;
+  --rosso:#a82424; --rosso-deep:#811919; --rosso-soft:#c43838; --rosso-ink:#5d0d0d;
+  --rosso-pale:#f6e4dd;
+  --cream:#f3e8c8; --cream-2:#ebe0b8; --cream-3:#d8c9a0; --paper:#faf2dc;
+  --ochre:#c4923a; --gold:#d8a020; --leaf:#1c4a2d; --leaf-pale:#e0e8d4;
+  --logo:'Bebas Neue',sans-serif;
+  --cond:'Barlow Condensed',sans-serif;
+  --serif:'Barlow Condensed',sans-serif;
+  --sans:'Barlow',sans-serif;
+  --mono:'DM Mono',monospace;
 }
+body{-webkit-font-smoothing:antialiased}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--texte);min-height:100vh}
-
-.topbar{
-  background:var(--rouge);padding:16px 28px;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
-  position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(192,57,43,.25);
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);min-height:100vh}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:repeating-linear-gradient(0deg,rgba(26,15,10,.018) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply;
 }
-.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;color:white}
-.topbar-logo span{color:rgba(255,255,255,.55);font-weight:400;font-size:14px;margin-left:10px;letter-spacing:1px}
-.topbar-sub{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:2px;margin-top:2px}
-.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.period-pills{display:flex;background:rgba(0,0,0,.15);border-radius:6px;padding:3px;gap:2px}
-.pill{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border:none;background:none;color:rgba(255,255,255,.55);cursor:pointer;border-radius:4px;transition:all .2s}
-.pill.on{background:white;color:var(--rouge)}
-.pill:hover:not(.on){background:rgba(255,255,255,.15);color:white}
-.btn-top{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:8px 16px;cursor:pointer;transition:all .2s}
-.btn-top:hover{background:rgba(255,255,255,.25)}
 
-.main{padding:28px 24px 80px;max-width:1300px;margin:0 auto}
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:var(--cream);
+  border-bottom:1px solid var(--cream-3);
+  backdrop-filter:saturate(140%) blur(8px);
+}
+.topbar-inner{
+  max-width:1280px;margin:0 auto;padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:baseline;gap:14px}
+.brand-mark{
+  font-family:var(--logo);font-weight:400;
+  font-size:30px;letter-spacing:.04em;color:var(--rosso);
+  display:flex;align-items:center;gap:10px;line-height:1;
+  text-decoration:none;
+}
+.brand-mark::before{content:none}
+.brand-mark i{font-style:normal;color:var(--ink)}
+.brand-sub{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.period{
+  display:inline-flex;background:var(--paper);
+  border:1px solid var(--cream-3);border-radius:3px;padding:3px;gap:2px;
+}
+.pill{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  padding:7px 12px;border:none;background:transparent;color:var(--mute);
+  cursor:pointer;border-radius:2px;transition:all .15s;
+}
+.pill.on{background:var(--rosso);color:var(--paper)}
+.pill:hover:not(.on){background:var(--cream-2);color:var(--ink)}
+.btn-top{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  background:var(--paper);color:var(--ink);
+  border:1px solid var(--cream-3);border-radius:3px;padding:8px 14px;
+  cursor:pointer;transition:all .15s;
+}
+.btn-top:hover{border-color:var(--rosso);color:var(--rosso)}
+.btn-top.solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-top.solid:hover{background:var(--rosso);border-color:var(--rosso);color:var(--paper)}
 
-.section-head{display:flex;align-items:center;gap:12px;margin:32px 0 14px}
-.section-head h2{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--rouge);white-space:nowrap}
-.section-head::after{content:'';flex:1;height:1.5px;background:var(--creme-c)}
+/* ── PAGE HEADER ── */
+.page-head{
+  position:relative;z-index:1;
+  max-width:1280px;margin:0 auto;
+  padding:40px 28px 8px;
+}
+.page-eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--rosso);display:flex;align-items:center;gap:10px;
+}
+.page-eyebrow::before{content:"";width:32px;height:1px;background:var(--rosso)}
+.page-title{
+  font-family:var(--logo);font-weight:400;
+  font-size:clamp(48px,7vw,86px);
+  line-height:.95;letter-spacing:.02em;color:var(--ink);
+  margin:14px 0 8px;text-transform:uppercase;
+}
+.page-title .it{color:var(--rosso)}
+.page-title .gold{color:var(--ochre);font-size:.6em;letter-spacing:.06em}
+.page-desc{
+  font-family:var(--cond);font-weight:500;font-size:17px;
+  color:var(--ink-2);max-width:52ch;letter-spacing:.01em;
+}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
-.kpi{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:10px;padding:18px 16px;transition:transform .2s,box-shadow .2s}
-.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(192,57,43,.1)}
-.kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--rouge);line-height:1}
-.kpi-val.md{font-size:20px;line-height:1.2}
-.kpi-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-top:6px}
-.kpi-sub{font-size:11px;color:var(--gris);opacity:.7;margin-top:2px}
+/* ── SECTION HEAD ── */
+.section-head{
+  display:flex;align-items:baseline;gap:14px;margin:44px 0 18px;
+  max-width:1280px;margin-left:auto;margin-right:auto;
+  padding:0 28px;
+}
+.sh-num{
+  font-family:var(--logo);font-weight:400;
+  font-size:34px;color:var(--ochre);line-height:1;letter-spacing:.04em;
+}
+.sh-h{
+  font-family:var(--logo);font-weight:400;
+  font-size:28px;letter-spacing:.04em;color:var(--ink);white-space:nowrap;
+  text-transform:uppercase;line-height:1;
+}
+.sh-h b{color:var(--rosso)}
+.sh-rule{flex:1;height:1px;background:var(--cream-3);align-self:center}
+.sh-meta{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
 
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
-.chart-box{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:12px;padding:22px}
-.chart-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rouge);margin-bottom:18px;padding-bottom:10px;border-bottom:1.5px solid var(--creme-b)}
-.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.hbar-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--texte);min-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hbar-track{flex:1;height:22px;background:var(--creme);border-radius:4px;overflow:hidden;border:1px solid var(--creme-b)}
-.hbar-fill{height:100%;border-radius:4px;transition:width .9s ease}
-.hbar-val{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--gris);min-width:36px;text-align:right}
+/* ── MAIN GRID ── */
+.main{
+  position:relative;z-index:1;
+  max-width:1280px;margin:0 auto;padding:0 28px 80px;
+}
 
+/* ── KPI GRID ── */
+.kpi-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+@media(max-width:1000px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kpi-grid{grid-template-columns:1fr 1fr}}
+.kpi{
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;
+  padding:20px 22px;transition:transform .2s,box-shadow .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 12px 30px -16px rgba(89,15,15,.25);border-color:var(--cream-3)}
+.kpi-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:10px;
+}
+.kpi-val{
+  font-family:var(--cond);font-weight:800;
+  font-size:58px;line-height:.9;color:var(--ink);letter-spacing:-.01em;
+}
+.kpi-val .denom{font-family:var(--cond);font-weight:500;font-size:16px;color:var(--mute);letter-spacing:.05em;margin-left:6px}
+.kpi-val.italic{color:var(--rosso);font-weight:800}
+.kpi-val.md{font-family:var(--logo);font-weight:400;font-size:30px;color:var(--ink);line-height:1;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val.md.rosso{color:var(--rosso)}
+.kpi-val.md.gold{color:var(--ochre)}
+.kpi-val.md.leaf{color:var(--leaf)}
+.kpi-sub{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--mute);
+  margin-top:8px;text-transform:uppercase;
+}
+.kpi.feature{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.kpi.feature .kpi-label{color:rgba(244,236,220,.55)}
+.kpi.feature .kpi-val{color:var(--paper)}
+.kpi.feature .kpi-val.italic{color:#f3c896}
+.kpi.feature .kpi-sub{color:rgba(244,236,220,.55)}
+
+/* ── CHARTS ── */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+@media(max-width:760px){.chart-row{grid-template-columns:1fr}}
+.chart-box{
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;
+  padding:22px 24px;
+}
+.chart-title{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  font-family:var(--logo);font-weight:400;
+  font-size:24px;letter-spacing:.04em;color:var(--ink);
+  margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--cream-2);
+  text-transform:uppercase;
+}
+.chart-title .sub{
+  font-family:var(--mono);font-weight:400;
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
+.hbar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.hbar-label{
+  font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink);
+  min-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hbar-track{
+  flex:1;height:6px;background:var(--cream-2);border-radius:0;
+  overflow:hidden;
+}
+.hbar-fill{height:100%;transition:width .9s ease}
+.hbar-val{
+  font-family:var(--cond);font-weight:800;
+  font-size:18px;color:var(--ink);min-width:42px;text-align:right;letter-spacing:.01em;
+}
+
+/* ── RANKINGS ── */
 .rankings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:800px){.rankings-grid{grid-template-columns:1fr}}
-.rank-card{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:12px;overflow:hidden}
-.rank-card-header{background:var(--rouge);padding:14px 18px;display:flex;align-items:center;gap:10px}
-.rank-card-header h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white;flex:1}
-.rank-count{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
-.rank-row{display:grid;grid-template-columns:28px 1fr 58px 58px;align-items:center;gap:8px;padding:11px 18px;border-bottom:1px solid var(--creme-b);transition:background .15s}
+@media(max-width:900px){.rankings-grid{grid-template-columns:1fr}}
+.rank-card{
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;overflow:hidden;
+}
+.rank-card-header{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:18px 22px 14px;border-bottom:1px solid var(--cream-2);
+}
+.rank-card-header h3{
+  font-family:var(--logo);font-weight:400;
+  font-size:24px;letter-spacing:.04em;color:var(--ink);text-transform:uppercase;
+}
+.rank-card-header h3 b{color:var(--rosso)}
+.rank-count{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
+.rank-row{
+  display:grid;grid-template-columns:34px 1fr auto auto;align-items:center;gap:14px;
+  padding:12px 22px;border-bottom:1px solid var(--cream-2);transition:background .15s;
+}
 .rank-row:last-child{border-bottom:none}
-.rank-row:hover{background:var(--creme)}
-.rr-pos{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--creme-c);text-align:center}
-.rr-pos.gold{color:#E8A020}.rr-pos.silver{color:#999}.rr-pos.bronze{color:#C8682A}
-.rr-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--texte)}
-.rr-cat{font-size:10px;color:var(--gris)}
-.note-pill{display:inline-block;padding:3px 8px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700}
-.note-h{background:#D5F5E3;color:#1E8449;border:1px solid #A9DFBF}
-.note-m{background:#FEF9E7;color:#B7770D;border:1px solid #F9E79F}
-.note-l{background:var(--rouge-pale);color:var(--rouge);border:1px solid #FADBD8}
-.rr-orders{text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--gris)}
-.bar-wrap{height:5px;background:var(--creme-b);border-radius:3px;margin-top:4px}
-.bar-fill{height:100%;border-radius:3px;background:var(--rouge);transition:width .8s ease}
+.rank-row:hover{background:var(--cream)}
+.rr-pos{
+  font-family:var(--cond);font-weight:800;
+  font-size:22px;color:var(--cream-3);text-align:center;line-height:1;
+}
+.rr-pos.gold{color:var(--gold)}.rr-pos.silver{color:#b09c7a}.rr-pos.bronze{color:#c8682a}
+.rr-name{
+  font-family:var(--cond);font-weight:700;font-size:17px;color:var(--ink);
+  line-height:1.15;text-transform:uppercase;letter-spacing:.04em;
+}
+.rr-cat{
+  font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--mute);margin-top:2px;
+}
+.note-pill{
+  display:inline-block;padding:4px 10px;border-radius:2px;
+  font-family:var(--cond);font-weight:800;font-size:16px;
+  border:1px solid;min-width:48px;text-align:center;letter-spacing:.01em;
+}
+.note-h{background:var(--leaf-pale);color:var(--leaf);border-color:rgba(79,107,61,.3)}
+.note-m{background:#f7eed1;color:#a07720;border-color:rgba(160,119,32,.3)}
+.note-l{background:var(--rosso-pale);color:var(--rosso);border-color:rgba(178,31,31,.25)}
+.rr-orders{
+  font-family:var(--cond);font-weight:800;
+  font-size:22px;color:var(--ink);text-align:right;line-height:1;letter-spacing:.01em;
+}
+.rr-orders .lab{
+  display:block;font-family:var(--mono);font-weight:400;
+  font-size:9px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase;margin-top:2px;
+}
+.bar-wrap{height:3px;background:var(--cream-2);margin-top:5px}
+.bar-fill{height:100%;background:var(--rosso);transition:width .8s ease}
 
-.cat-block{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:12px;overflow:hidden;margin-bottom:12px}
-.cat-block-header{display:flex;align-items:center;gap:10px;padding:13px 20px;background:var(--creme);border-bottom:1.5px solid var(--creme-b);cursor:pointer;user-select:none}
-.cat-block-header h3{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--texte);flex:1}
-.cat-block-header .chev{color:var(--gris);font-size:12px;transition:transform .3s}
+/* ── BY CATEGORY ── */
+.cat-block{
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;
+  overflow:hidden;margin-bottom:10px;
+}
+.cat-block-header{
+  display:flex;align-items:baseline;gap:14px;padding:14px 22px;
+  background:var(--paper);border-bottom:1px solid var(--cream-2);
+  cursor:pointer;user-select:none;transition:background .15s;
+}
+.cat-block-header:hover{background:var(--cream)}
+.cat-block-header h3{
+  font-family:var(--logo);font-weight:400;
+  font-size:26px;letter-spacing:.04em;color:var(--ink);text-transform:uppercase;
+}
+.cat-meta{
+  margin-left:auto;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
+.chev{color:var(--mute);font-family:var(--cond);font-weight:700;font-size:14px;transition:transform .3s}
 .cat-block.closed .chev{transform:rotate(-90deg)}
 .cat-block.closed .cat-block-body{display:none}
-.table-head{display:grid;grid-template-columns:28px 1fr 70px 70px 100px 55px;gap:8px;padding:9px 20px;background:var(--creme);border-bottom:1px solid var(--creme-b);font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gris)}
-.table-row{display:grid;grid-template-columns:28px 1fr 70px 70px 100px 55px;gap:8px;padding:11px 20px;border-bottom:1px solid var(--creme-b);align-items:center;transition:background .15s}
+
+.table-head,.table-row{
+  display:grid;grid-template-columns:34px 1fr 70px 80px 1fr 50px;
+  gap:14px;padding:11px 22px;align-items:center;
+}
+.table-head{
+  background:var(--cream);border-bottom:1px solid var(--cream-2);
+  font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
+.table-row{border-bottom:1px solid var(--cream-2);transition:background .15s}
 .table-row:last-child{border-bottom:none}
-.table-row:hover{background:var(--creme)}
-.tr-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--creme-c);text-align:center}
-.tr-pos.g1{color:#E8A020}.tr-pos.g2{color:#999}.tr-pos.g3{color:#C8682A}
-.tr-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--texte)}
-.tr-cell{text-align:center;font-family:'Barlow Condensed',sans-serif}
-.tr-val{font-size:16px;font-weight:700;color:var(--texte)}
-.tr-sub{font-size:10px;color:var(--gris)}
-.trend-icon{font-size:18px;text-align:center}
+.table-row:hover{background:var(--cream)}
+.tr-pos{
+  font-family:var(--cond);font-weight:800;
+  font-size:18px;color:var(--cream-3);text-align:center;
+}
+.tr-pos.g1{color:var(--gold)}.tr-pos.g2{color:#b09c7a}.tr-pos.g3{color:#c8682a}
+.tr-name{font-family:var(--cond);font-weight:700;font-size:15px;color:var(--ink);text-transform:uppercase;letter-spacing:.04em}
+.tr-cell{text-align:center}
+.tr-val{font-family:var(--cond);font-weight:800;font-size:20px;color:var(--ink);line-height:1;letter-spacing:.01em}
+.tr-sub{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase;margin-top:2px}
+.trend-icon{font-family:var(--cond);font-weight:800;font-size:18px;text-align:center}
+.trend-icon.up{color:var(--leaf)}
+.trend-icon.mid{color:var(--ochre)}
+.trend-icon.down{color:var(--rosso)}
 
-.reviews-list{padding:4px 0}
-.rev-item{display:flex;gap:14px;align-items:flex-start;padding:14px 20px;border-bottom:1px solid var(--creme-b);transition:background .15s}
+/* ── REVIEWS LIST ── */
+.reviews-block{
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;overflow:hidden;
+}
+.rev-item{
+  display:grid;grid-template-columns:54px 1fr;gap:18px;align-items:flex-start;
+  padding:16px 22px;border-bottom:1px solid var(--cream-2);transition:background .15s;
+}
 .rev-item:last-child{border-bottom:none}
-.rev-item:hover{background:var(--creme)}
-.rev-score{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800}
-.rev-body .rname{font-weight:600;font-size:14px;color:var(--texte)}
-.rev-body .rdate{font-size:11px;color:var(--gris);margin-left:6px}
-.dish-tag{display:inline-block;background:var(--rouge-pale);color:var(--rouge);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;margin:4px 0}
-.rev-comment{font-size:12px;color:var(--gris);font-style:italic;margin-top:3px}
+.rev-item:hover{background:var(--cream)}
+.rev-score{
+  width:54px;height:54px;border-radius:50%;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:var(--cond);font-weight:800;
+  border:1px solid;
+}
+.rev-score .n{font-size:24px;line-height:1;letter-spacing:.01em}
+.rev-score .d{font-family:var(--mono);font-weight:400;font-size:8px;letter-spacing:.15em;color:var(--mute);margin-top:2px}
+.rev-body .rname{
+  font-family:var(--cond);font-weight:700;font-size:18px;color:var(--ink);
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.rev-body .rdate{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--mute);margin-left:8px;
+}
+.dish-tag{
+  display:inline-block;background:var(--rosso-pale);color:var(--rosso);
+  font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  padding:3px 8px;border-radius:2px;margin:6px 0 0;
+}
+.rev-comment{
+  font-family:var(--cond);font-style:italic;font-weight:500;font-size:15px;color:var(--ink-2);
+  margin-top:6px;line-height:1.55;letter-spacing:.01em;
+}
+.rev-comment::before{content:"« "}
+.rev-comment::after{content:" »"}
 
-.empty{text-align:center;padding:48px 20px;color:var(--gris)}
-.empty .icon{font-size:40px;margin-bottom:10px;opacity:.5}
-.empty p{font-size:14px}
+/* ── EMPTY ── */
+.empty{
+  text-align:center;padding:48px 20px;
+}
+.empty .icon{
+  font-family:var(--cond);font-weight:800;font-size:48px;color:var(--cream-3);margin-bottom:6px;
+}
+.empty p{
+  font-family:var(--cond);font-style:italic;font-weight:500;font-size:16px;color:var(--mute);
+}
 
-@media(max-width:600px){
-  .table-head,.table-row{grid-template-columns:24px 1fr 60px 60px}
+@media(max-width:720px){
+  .table-head,.table-row{grid-template-columns:28px 1fr 70px 80px}
   .table-head :nth-child(n+5),.table-row :nth-child(n+5){display:none}
-  .main{padding:16px 14px 60px}
-  .topbar{padding:12px 16px}
+  .topbar-inner{padding:12px 16px}
+  .page-head{padding:24px 16px 4px}
+  .section-head{padding:0 16px}
+  .main{padding:0 16px 60px}
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div>
-    <div class="topbar-logo">Al Forno <span>· Dashboard</span></div>
-    <div class="topbar-sub">Sartrouville · Statistiques & Avis</div>
-  </div>
-  <div class="topbar-right">
-    <div class="period-pills">
-      <button class="pill" onclick="setPeriod('day',this)">Jour</button>
-      <button class="pill on" onclick="setPeriod('week',this)">Semaine</button>
-      <button class="pill" onclick="setPeriod('month',this)">Mois</button>
-      <button class="pill" onclick="setPeriod('year',this)">Année</button>
-      <button class="pill" onclick="setPeriod('all',this)">Tout</button>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a class="brand-mark" href="index.html">AL FORNO</a>
+      <span class="brand-sub">Tableau de bord · Sartrouville</span>
     </div>
-    <button class="btn-top" onclick="loadDemo()">🎲 Démo</button>
-    <button class="btn-top" onclick="exportCSV()">⬇ CSV</button>
+    <div class="tools">
+      <div class="period" role="tablist">
+        <button class="pill" onclick="setPeriod('day',this)">Jour</button>
+        <button class="pill on" onclick="setPeriod('week',this)">Semaine</button>
+        <button class="pill" onclick="setPeriod('month',this)">Mois</button>
+        <button class="pill" onclick="setPeriod('year',this)">Année</button>
+        <button class="pill" onclick="setPeriod('all',this)">Tout</button>
+      </div>
+      <button class="btn-top" onclick="loadDemo()">Démo</button>
+      <button class="btn-top solid" onclick="exportCSV()">↓ Export CSV</button>
+    </div>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="page-eyebrow">Lecture des avis · Période en cours</div>
+  <h1 class="page-title"><span class="it">La</span> maison<span class="gold">, en chiffres</span></h1>
+  <p class="page-desc">Notes, commandes, palmarès et alertes — l'état de la cuisine vue depuis la salle.</p>
+</section>
+
+<div class="section-head">
+  <span class="sh-num">01</span>
+  <span class="sh-h">Vue d'<b>ensemble</b></span>
+  <span class="sh-rule"></span>
+  <span class="sh-meta" id="period-label">Cette semaine</span>
+</div>
+<div class="main"><div class="kpi-grid" id="kpi-grid"></div></div>
+
+<div class="section-head">
+  <span class="sh-num">02</span>
+  <span class="sh-h">Le <b>palmarès</b></span>
+  <span class="sh-rule"></span>
+  <span class="sh-meta">Top 8</span>
+</div>
+<div class="main">
+  <div class="chart-row">
+    <div class="chart-box">
+      <div class="chart-title">Plus <span style="font-style:normal;color:var(--rosso)">commandés</span><span class="sub">Top 8</span></div>
+      <div id="chart-orders"></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Mieux <span style="font-style:normal;color:var(--rosso)">notés</span><span class="sub">Top 8</span></div>
+      <div id="chart-notes"></div>
+    </div>
   </div>
 </div>
 
+<div class="section-head">
+  <span class="sh-num">03</span>
+  <span class="sh-h">Le <b>classement</b></span>
+  <span class="sh-rule"></span>
+  <span class="sh-meta">Global</span>
+</div>
 <div class="main">
-  <div class="section-head"><h2>Vue d'ensemble</h2></div>
-  <div class="kpi-grid" id="kpi-grid"></div>
-
-  <div class="section-head"><h2>Répartition</h2></div>
-  <div class="chart-row">
-    <div class="chart-box"><div class="chart-title">🍽️ Top 8 — Plus commandés</div><div id="chart-orders"></div></div>
-    <div class="chart-box"><div class="chart-title">⭐ Top 8 — Mieux notés</div><div id="chart-notes"></div></div>
-  </div>
-
-  <div class="section-head"><h2>Palmarès global</h2></div>
   <div class="rankings-grid">
     <div class="rank-card">
-      <div class="rank-card-header"><span>🏆</span><h3>Meilleur → Moins bon</h3><span class="rank-count" id="rc-best"></span></div>
+      <div class="rank-card-header">
+        <h3>Du meilleur <b>au moins bon</b></h3>
+        <span class="rank-count" id="rc-best"></span>
+      </div>
       <div id="rank-best"></div>
     </div>
     <div class="rank-card">
-      <div class="rank-card-header"><span>📦</span><h3>Plus → Moins commandé</h3><span class="rank-count" id="rc-orders"></span></div>
+      <div class="rank-card-header">
+        <h3>Du plus <b>au moins commandé</b></h3>
+        <span class="rank-count" id="rc-orders"></span>
+      </div>
       <div id="rank-orders"></div>
     </div>
   </div>
-
-  <div class="section-head"><h2>Palmares par catégorie</h2></div>
-  <div id="by-category"></div>
-
-  <div class="section-head"><h2>Avis récents</h2></div>
-  <div class="cat-block">
-    <div class="cat-block-header" onclick="toggle(this)">
-      <span>💬</span><h3>Tous les avis</h3>
-      <span id="rev-count" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--rouge);margin-right:8px"></span>
-      <span class="chev">▼</span>
-    </div>
-    <div class="cat-block-body"><div class="reviews-list" id="rev-list"></div></div>
-  </div>
 </div>
+
+<div class="section-head">
+  <span class="sh-num">04</span>
+  <span class="sh-h">Par <b>catégorie</b></span>
+  <span class="sh-rule"></span>
+  <span class="sh-meta">Détail</span>
+</div>
+<div class="main"><div id="by-category"></div></div>
+
+<div class="section-head">
+  <span class="sh-num">05</span>
+  <span class="sh-h">Les <b>avis récents</b></span>
+  <span class="sh-rule"></span>
+  <span class="sh-meta" id="rev-count"></span>
+</div>
+<div class="main"><div class="reviews-block" id="rev-list"></div></div>
 
 <script>
 const STORAGE_KEY='alforno_v3';
 const MENU={"Pizzas":["Marinara","Marguerita","Regina","Quattro Fromaggi","Calzone","Napoli","Veggie","Pollo","4 Saisons","Parmigiana","Cheesy","Goat","Orientale","Carbonara","Brooklyn","Tuna","Bresaola","Salmone","Piccante","Al Forno","Tartufo","Burrata","Borsalino"],"Pasta":["Mac N'Cheese","Arrabiata","Quattro Formaggi P.","Bolognese","Alfredo","Pesto","Carbonara P.","Tartufo P.","Salmone P."],"Panuozzos":["Italiano","Parigi","Caesar Chicken","Americano","Gusto","Pistacchio","Marsa","Pastrami"],"Burratas":["Classica","Pesto B.","Tartufo B."],"Salades":["Verde","Al Tonno","Caesar"],"À Partager":["Foccacia","Foccacia Pomodoro","Foccacia Tartufo","Cheesy Bread"],"Desserts":["Tiramisu","Panna Cotta","Glace Barattolino","Pizza Nutella"],"Boissons":["Eau Bouteille","Mole Cola","Limonade Sicilienne","Estathe Pesca","San Pellegrino Gazeuse","San Pellegrino Boisson"]};
-const CAT_ICONS={"Pizzas":"🍕","Pasta":"🍝","Panuozzos":"🥙","Burratas":"🧀","Salades":"🥗","À Partager":"🫓","Desserts":"🍮","Boissons":"🥤"};
-const CAT_COLORS={"Pizzas":"#C0392B","Pasta":"#E67E22","Panuozzos":"#D4AC0D","Burratas":"#B7950B","Salades":"#1E8449","À Partager":"#A04000","Desserts":"#7D3C98","Boissons":"#1A5276"};
+const CAT_COLORS={"Pizzas":"#b21f1f","Pasta":"#c4923a","Panuozzos":"#a07720","Burratas":"#8a1717","Salades":"#4f6b3d","À Partager":"#c8682a","Desserts":"#8a4d9b","Boissons":"#3a6485"};
+const PERIOD_LBL={day:"Aujourd'hui",week:"Cette semaine",month:"Ce mois",year:"Cette année",all:"Toute l'histoire"};
 
 let period='week';
 function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
@@ -205,15 +485,20 @@ function aggregate(data){
   return Object.values(s).map(x=>({...x,avg:x.count?x.total/x.count:0}));
 }
 function nc(n){return n>=8?'note-h':n>=6?'note-m':'note-l';}
-function nbg(n){return n>=8?'#D5F5E3':n>=6?'#FEF9E7':'#FDECEA';}
-function nfg(n){return n>=8?'#1E8449':n>=6?'#B7770D':'#C0392B';}
-function tr(n){return n>=8?'🔥':n>=6?'👍':'⚠️';}
+function nbg(n){return n>=8?'#e5ecd9':n>=6?'#f7eed1':'#f7e5e0';}
+function nfg(n){return n>=8?'#4f6b3d':n>=6?'#a07720':'#b21f1f';}
+function tr(n){return n>=8?{cls:'up',txt:'↑'}:n>=6?{cls:'mid',txt:'→'}:{cls:'down',txt:'↓'};}
 function pc(i){return i===0?'gold':i===1?'silver':i===2?'bronze':'';}
 function pt(i){return i===0?'g1':i===1?'g2':i===2?'g3':'';}
 
 function render(){
   const all=load(),data=filterPeriod(all,period),stats=aggregate(data);
-  renderKPI(data,stats,all);renderCharts(stats);renderRankings(stats);renderByCategory(stats);renderReviews(all);
+  document.getElementById('period-label').textContent = PERIOD_LBL[period] || '';
+  renderKPI(data,stats,all);
+  renderCharts(stats);
+  renderRankings(stats);
+  renderByCategory(stats);
+  renderReviews(all);
 }
 
 function renderKPI(data,stats,all){
@@ -221,63 +506,70 @@ function renderKPI(data,stats,all){
   const avg=tD?(stats.reduce((s,d)=>s+d.total,0)/tD).toFixed(1):'—';
   const topN=[...stats].sort((a,b)=>b.avg-a.avg)[0];
   const topO=[...stats].sort((a,b)=>b.count-a.count)[0];
-  const worst=stats.length?[...stats].sort((a,b)=>a.avg-b.avg)[0]:null;
+  const worst=stats.length?[...stats].filter(s=>s.count>=1).sort((a,b)=>a.avg-b.avg)[0]:null;
   document.getElementById('kpi-grid').innerHTML=`
-    <div class="kpi"><div class="kpi-val">${tR}</div><div class="kpi-label">Avis reçus</div><div class="kpi-sub">sur la période</div></div>
-    <div class="kpi"><div class="kpi-val">${tD}</div><div class="kpi-label">Plats notés</div></div>
-    <div class="kpi"><div class="kpi-val">${avg}</div><div class="kpi-label">Note moyenne</div><div class="kpi-sub">/ 10</div></div>
-    <div class="kpi"><div class="kpi-val">${stats.length}</div><div class="kpi-label">Plats différents</div></div>
-    <div class="kpi"><div class="kpi-val md" style="color:var(--vert)">${topN?topN.name:'—'}</div><div class="kpi-label">🏆 Meilleur plat</div><div class="kpi-sub">${topN?topN.avg.toFixed(1)+'/10':''}</div></div>
-    <div class="kpi"><div class="kpi-val md" style="color:var(--or)">${topO?topO.name:'—'}</div><div class="kpi-label">📦 Plus commandé</div><div class="kpi-sub">${topO?topO.count+' fois':''}</div></div>
-    <div class="kpi"><div class="kpi-val md" style="color:var(--rouge)">${worst?worst.name:'—'}</div><div class="kpi-label">⚠️ Moins bien noté</div><div class="kpi-sub">${worst?worst.avg.toFixed(1)+'/10':''}</div></div>
-    <div class="kpi"><div class="kpi-val">${all.length}</div><div class="kpi-label">Total tous avis</div></div>`;
+    <div class="kpi"><div class="kpi-label">Avis reçus</div><div class="kpi-val italic">${tR}</div><div class="kpi-sub">sur la période</div></div>
+    <div class="kpi"><div class="kpi-label">Plats notés</div><div class="kpi-val">${tD}</div><div class="kpi-sub">au total</div></div>
+    <div class="kpi feature"><div class="kpi-label">Note moyenne</div><div class="kpi-val italic">${avg}<span class="denom">/ 10</span></div><div class="kpi-sub">tous plats confondus</div></div>
+    <div class="kpi"><div class="kpi-label">Plats distincts</div><div class="kpi-val">${stats.length}</div><div class="kpi-sub">notés cette période</div></div>
+    <div class="kpi"><div class="kpi-label">★ Meilleur plat</div><div class="kpi-val md leaf">${topN?topN.name:'—'}</div><div class="kpi-sub">${topN?topN.avg.toFixed(1)+' / 10':''}</div></div>
+    <div class="kpi"><div class="kpi-label">↑ Plus commandé</div><div class="kpi-val md gold">${topO?topO.name:'—'}</div><div class="kpi-sub">${topO?topO.count+' fois':''}</div></div>
+    <div class="kpi"><div class="kpi-label">↓ À surveiller</div><div class="kpi-val md rosso">${worst?worst.name:'—'}</div><div class="kpi-sub">${worst?worst.avg.toFixed(1)+' / 10':''}</div></div>
+    <div class="kpi"><div class="kpi-label">Cumul total</div><div class="kpi-val">${all.length}</div><div class="kpi-sub">avis de tous les temps</div></div>`;
 }
+
 function renderCharts(stats){
   const byO=[...stats].sort((a,b)=>b.count-a.count).slice(0,8),mO=byO[0]?.count||1;
-  document.getElementById('chart-orders').innerHTML=byO.length?byO.map(d=>`<div class="hbar-row"><div class="hbar-label">${d.name}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(d.count/mO*100).toFixed(0)}%;background:${CAT_COLORS[d.cat]||'var(--rouge)'}"></div></div><div class="hbar-val">${d.count}</div></div>`).join(''):'<div class="empty"><div class="icon">📦</div><p>Aucune donnée</p></div>';
+  document.getElementById('chart-orders').innerHTML=byO.length?byO.map(d=>`<div class="hbar-row"><div class="hbar-label">${d.name}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(d.count/mO*100).toFixed(0)}%;background:${CAT_COLORS[d.cat]||'var(--rosso)'}"></div></div><div class="hbar-val">${d.count}</div></div>`).join(''):'<div class="empty"><div class="icon">∅</div><p>Aucune donnée</p></div>';
   const byN=[...stats].filter(d=>d.count>=1).sort((a,b)=>b.avg-a.avg).slice(0,8);
-  document.getElementById('chart-notes').innerHTML=byN.length?byN.map(d=>`<div class="hbar-row"><div class="hbar-label">${d.name}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(d.avg/10*100).toFixed(0)}%;background:${nfg(d.avg)}"></div></div><div class="hbar-val" style="color:${nfg(d.avg)}">${d.avg.toFixed(1)}</div></div>`).join(''):'<div class="empty"><div class="icon">⭐</div><p>Aucune donnée</p></div>';
+  document.getElementById('chart-notes').innerHTML=byN.length?byN.map(d=>`<div class="hbar-row"><div class="hbar-label">${d.name}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(d.avg/10*100).toFixed(0)}%;background:${nfg(d.avg)}"></div></div><div class="hbar-val" style="color:${nfg(d.avg)}">${d.avg.toFixed(1)}</div></div>`).join(''):'<div class="empty"><div class="icon">∅</div><p>Aucune donnée</p></div>';
 }
+
 function renderRankings(stats){
-  if(!stats.length){['rank-best','rank-orders'].forEach(id=>{document.getElementById(id).innerHTML='<div class="empty"><div class="icon">🍽️</div><p>Aucune donnée</p></div>';});return;}
+  if(!stats.length){['rank-best','rank-orders'].forEach(id=>{document.getElementById(id).innerHTML='<div class="empty"><div class="icon">∅</div><p>Aucune donnée pour cette période.</p></div>';});return;}
   const byB=[...stats].sort((a,b)=>b.avg-a.avg).slice(0,10);
   document.getElementById('rc-best').textContent=byB.length+' plats';
-  document.getElementById('rank-best').innerHTML=byB.map((d,i)=>`<div class="rank-row"><div class="rr-pos ${pc(i)}">${i+1}</div><div><div class="rr-name">${d.name}</div><div class="rr-cat">${CAT_ICONS[d.cat]||''} ${d.cat}</div></div><div><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="rr-orders">${d.count}<div style="font-size:10px;color:var(--gris)">cmd</div></div></div>`).join('');
+  document.getElementById('rank-best').innerHTML=byB.map((d,i)=>`<div class="rank-row"><div class="rr-pos ${pc(i)}">${i+1}</div><div><div class="rr-name">${d.name}</div><div class="rr-cat">${d.cat}</div></div><div><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="rr-orders">${d.count}<span class="lab">commandes</span></div></div>`).join('');
   const byO=[...stats].sort((a,b)=>b.count-a.count).slice(0,10),mC=byO[0]?.count||1;
   document.getElementById('rc-orders').textContent=byO.length+' plats';
-  document.getElementById('rank-orders').innerHTML=byO.map((d,i)=>`<div class="rank-row"><div class="rr-pos ${pc(i)}">${i+1}</div><div><div class="rr-name">${d.name}</div><div class="bar-wrap"><div class="bar-fill" style="width:${(d.count/mC*100).toFixed(0)}%"></div></div></div><div><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="rr-orders">${d.count}<div style="font-size:10px;color:var(--gris)">cmd</div></div></div>`).join('');
+  document.getElementById('rank-orders').innerHTML=byO.map((d,i)=>`<div class="rank-row"><div class="rr-pos ${pc(i)}">${i+1}</div><div><div class="rr-name">${d.name}</div><div class="bar-wrap"><div class="bar-fill" style="width:${(d.count/mC*100).toFixed(0)}%"></div></div></div><div><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="rr-orders">${d.count}<span class="lab">commandes</span></div></div>`).join('');
 }
+
 function renderByCategory(stats){
   const wrap=document.getElementById('by-category');
   wrap.innerHTML='';
-  if(!stats.length){wrap.innerHTML='<div class="empty"><div class="icon">🍽️</div><p>Aucune donnée pour cette période.</p></div>';return;}
+  if(!stats.length){wrap.innerHTML='<div class="empty"><div class="icon">∅</div><p>Aucune donnée pour cette période.</p></div>';return;}
   for(const [cat] of Object.entries(MENU)){
     const cs=stats.filter(s=>s.cat===cat).sort((a,b)=>b.avg-a.avg);
     if(!cs.length)continue;
-    const mC=Math.max(...cs.map(d=>d.count)),color=CAT_COLORS[cat]||'var(--rouge)';
+    const mC=Math.max(...cs.map(d=>d.count)),color=CAT_COLORS[cat]||'var(--rosso)';
     const block=document.createElement('div');
     block.className='cat-block';
-    block.innerHTML=`<div class="cat-block-header" onclick="toggle(this)"><span>${CAT_ICONS[cat]||'🍽️'}</span><h3>${cat}</h3><span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:${color};margin-right:8px">${cs.length} plat(s) noté(s)</span><span class="chev">▼</span></div><div class="cat-block-body"><div class="table-head"><div>#</div><div>Plat</div><div style="text-align:center">Note</div><div style="text-align:center">Commandes</div><div style="text-align:center">Popularité</div><div style="text-align:center">Statut</div></div>${cs.map((d,i)=>`<div class="table-row"><div class="tr-pos ${pt(i)}">${i+1}</div><div class="tr-name">${d.name}</div><div class="tr-cell"><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="tr-cell"><div class="tr-val">${d.count}</div><div class="tr-sub">fois</div></div><div class="tr-cell"><div class="bar-wrap" style="margin:0"><div class="bar-fill" style="width:${mC?Math.round(d.count/mC*100):0}%;background:${color}"></div></div><div class="tr-sub">${mC?Math.round(d.count/mC*100):0}%</div></div><div class="trend-icon">${tr(d.avg)}</div></div>`).join('')}</div>`;
+    block.innerHTML=`<div class="cat-block-header" onclick="toggle(this)"><h3>${cat}</h3><span class="cat-meta">${cs.length} plat${cs.length>1?'s':''} noté${cs.length>1?'s':''}</span><span class="chev">▾</span></div><div class="cat-block-body"><div class="table-head"><div>#</div><div>Plat</div><div style="text-align:center">Note</div><div style="text-align:center">Commandes</div><div style="text-align:center">Popularité</div><div style="text-align:center">Statut</div></div>${cs.map((d,i)=>{const t=tr(d.avg);return`<div class="table-row"><div class="tr-pos ${pt(i)}">${i+1}</div><div class="tr-name">${d.name}</div><div class="tr-cell"><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="tr-cell"><div class="tr-val">${d.count}</div><div class="tr-sub">fois</div></div><div class="tr-cell"><div class="bar-wrap" style="margin:0"><div class="bar-fill" style="width:${mC?Math.round(d.count/mC*100):0}%;background:${color}"></div></div><div class="tr-sub">${mC?Math.round(d.count/mC*100):0}%</div></div><div class="trend-icon ${t.cls}">${t.txt}</div></div>`}).join('')}</div>`;
     wrap.appendChild(block);
   }
 }
+
 function renderReviews(allData){
   const flat=[];
   [...allData].reverse().forEach(e=>e.reviews.forEach(r=>flat.push({...r,clientName:e.clientName,visitDate:e.visitDate,gen:e.generalComment})));
   document.getElementById('rev-count').textContent=flat.length+' avis';
   const wrap=document.getElementById('rev-list');
-  if(!flat.length){wrap.innerHTML='<div class="empty"><div class="icon">💬</div><p>Aucun avis pour le moment.</p></div>';return;}
-  wrap.innerHTML=flat.slice(0,30).map(r=>{const comment=r.comment||r.gen;return`<div class="rev-item"><div class="rev-score" style="background:${nbg(r.note)};color:${nfg(r.note)};border:1.5px solid ${nfg(r.note)}40">${r.note}</div><div class="rev-body"><div><span class="rname">${r.clientName}</span><span class="rdate">${new Date(r.visitDate).toLocaleDateString('fr-FR')}</span></div><span class="dish-tag">${CAT_ICONS[r.cat]||''} ${r.name}</span>${comment?`<div class="rev-comment">"${comment}"</div>`:''}</div></div>`;}).join('');
+  if(!flat.length){wrap.innerHTML='<div class="empty"><div class="icon">∅</div><p>Aucun avis pour le moment.</p></div>';return;}
+  wrap.innerHTML=flat.slice(0,40).map(r=>{const comment=r.comment||r.gen;return`<div class="rev-item"><div class="rev-score" style="background:${nbg(r.note)};color:${nfg(r.note)};border-color:${nfg(r.note)}40"><span class="n">${r.note}</span><span class="d">/ 10</span></div><div class="rev-body"><div><span class="rname">${r.clientName}</span><span class="rdate">${new Date(r.visitDate).toLocaleDateString('fr-FR')}</span></div><span class="dish-tag">${r.cat} · ${r.name}</span>${comment?`<div class="rev-comment">${comment}</div>`:''}</div></div>`;}).join('');
 }
+
 function toggle(h){h.parentElement.classList.toggle('closed');}
 function setPeriod(p,btn){period=p;document.querySelectorAll('.pill').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render();}
+
 function exportCSV(){
-  const data=load();if(!data.length){alert('Aucune donnée.');return;}
+  const data=load();if(!data.length){alert('Aucune donnée à exporter.');return;}
   const rows=[['Date','Client','Moment','Catégorie','Plat','Note','Commentaire','Remarque']];
   data.forEach(e=>e.reviews.forEach(r=>rows.push([e.visitDate,e.clientName,e.visitMoment,r.cat,r.name,r.note,r.comment,e.generalComment])));
   const csv=rows.map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download='alforno-avis-'+new Date().toISOString().split('T')[0]+'.csv';a.click();
 }
+
 function loadDemo(){
   if(load().length&&!confirm('Remplacer par des données de démo ?'))return;
   const dishes=[{cat:'Pizzas',name:'Al Forno'},{cat:'Pizzas',name:'Brooklyn'},{cat:'Pizzas',name:'Carbonara'},{cat:'Pizzas',name:'Marguerita'},{cat:'Pizzas',name:'Tartufo'},{cat:'Pizzas',name:'Salmone'},{cat:'Pizzas',name:'Borsalino'},{cat:'Pizzas',name:'Piccante'},{cat:'Pasta',name:'Bolognese'},{cat:'Pasta',name:'Carbonara P.'},{cat:'Pasta',name:'Tartufo P.'},{cat:'Pasta',name:'Alfredo'},{cat:'Panuozzos',name:'Pistacchio'},{cat:'Panuozzos',name:'Italiano'},{cat:'Panuozzos',name:'Pastrami'},{cat:'Burratas',name:'Tartufo B.'},{cat:'Desserts',name:'Tiramisu'},{cat:'Desserts',name:'Pizza Nutella'},{cat:'Boissons',name:'Limonade Sicilienne'},{cat:'Salades',name:'Caesar'}];
