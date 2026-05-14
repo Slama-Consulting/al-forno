@@ -48,15 +48,15 @@ body::before{
   display:flex;align-items:center;justify-content:space-between;
   border-bottom:1.5px solid var(--cream-3);
   padding-bottom:18px;
+  gap:12px;flex-wrap:wrap;
 }
-.brand-mini{display:flex;align-items:center;gap:14px;flex-shrink:0;min-width:0}
+.brand-mini{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-width:0}
 .brand-mini-word{
   font-family:var(--logo);font-size:32px;letter-spacing:.04em;color:var(--rosso);
   line-height:1;white-space:nowrap;
 }
 .brand-mini-sub{
   font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
-  white-space:nowrap;
 }
 .meta{
   font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);
@@ -83,7 +83,7 @@ body::before{
 .logo-block{position:relative;min-width:0}
 .logo-word{
   font-family:var(--logo);
-  font-size:clamp(96px,14vw,200px);
+  font-size:clamp(72px,14vw,200px);
   line-height:.88;letter-spacing:.02em;
   color:var(--rosso);
   display:block;white-space:nowrap;
@@ -277,6 +277,11 @@ body::before{
   .card h2{font-size:38px}
   .card-primary .stamp{font-size:120px;bottom:-18px}
   .card-menu .stamp{font-size:96px;bottom:-14px}
+  .brand-mini-word{font-size:26px}
+  .brand-mini-sub{font-size:9px;letter-spacing:.18em;flex-basis:100%}
+  .meta{font-size:10px;letter-spacing:.14em}
+  .meta .sep{margin:0 6px}
+  .hero-side{padding-left:0;border-left:none;border-top:1.5px solid var(--cream-3);padding-top:18px;margin-top:12px}
 }
 </style>
 </head>

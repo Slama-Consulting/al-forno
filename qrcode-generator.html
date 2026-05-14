@@ -99,6 +99,18 @@
     .qr-actions { display:none !important; }
   }
 
+  @media (max-width:600px) {
+    body { padding:24px 16px 64px; }
+    h1 { font-size:32px; padding-right:120px; line-height:1.1; }
+    .tagline { margin-bottom:28px; }
+    .guide, .url-section { padding:22px 18px; }
+    .topbar-logout { top:12px; right:12px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
+    .step { gap:12px; }
+    .step-num { width:28px; height:28px; font-size:13px; }
+    .qr-card { padding:20px; }
+    .qr-restaurant { font-size:24px; }
+  }
+
   /* ── LOGIN OVERLAY (Firebase Auth, partagé avec dashboard.html) ── */
   #auth-overlay{
     position:fixed; inset:0; z-index:1000;

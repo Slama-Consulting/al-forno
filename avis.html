@@ -38,17 +38,17 @@ body::before{
 }
 .header-inner{max-width:780px;margin:0 auto}
 .h-row{
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
   font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--mute);
 }
-.h-row .left{display:flex;align-items:center;gap:10px}
-.h-row .dot{width:7px;height:7px;border-radius:50%;background:var(--rosso);box-shadow:0 0 0 3px rgba(178,31,31,.14)}
+.h-row .left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.h-row .dot{width:7px;height:7px;border-radius:50%;background:var(--rosso);box-shadow:0 0 0 3px rgba(178,31,31,.14);flex-shrink:0}
 .h-title{
   font-family:var(--logo);font-weight:400;
-  font-size:clamp(56px,10vw,108px);
+  font-size:clamp(44px,10vw,108px);
   line-height:.9;letter-spacing:.02em;color:var(--ink);
-  margin:18px 0 8px;text-transform:uppercase;white-space:nowrap;
+  margin:18px 0 8px;text-transform:uppercase;
 }
 .h-title .it{color:var(--rosso)}
 .h-sub{
@@ -244,7 +244,7 @@ textarea{resize:vertical;min-height:90px;font-family:var(--sans)}
 .score-badge .denom{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--mute);letter-spacing:.1em}
 
 /* ── BUTTONS ── */
-.btn-row{display:flex;gap:10px;margin-top:32px}
+.btn-row{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}
 .btn{
   font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
   border:none;border-radius:3px;padding:16px 28px;cursor:pointer;
@@ -300,6 +300,16 @@ textarea{resize:vertical;min-height:90px;font-family:var(--sans)}
   .panel-desc{margin-left:0;margin-top:8px}
   .rc-name{font-size:20px}
   #success h2{font-size:46px}
+  .header{padding:18px 18px 20px}
+  .content{padding:32px 18px 64px}
+  .h-title{font-size:44px}
+  .btn-primary,.btn-ghost{flex:1 1 100%;padding:14px 22px}
+  .rc-head{flex-wrap:wrap}
+  .stars-row{gap:8px}
+  .stars-label{min-width:auto}
+  .dc-name{font-size:13px;padding-right:14px}
+  .dish-card.sel::after{top:8px;right:8px;width:12px;height:12px}
+  .dish-card.sel::before{top:11px;right:13px}
 }
 </style>
 </head>
