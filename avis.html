@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Forno — Donnez votre avis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rouge:      #C0392B;
+  --rouge-vif:  #E74C3C;
+  --creme:      #FAF7F2;
+  --creme-b:    #EDE5D8;
+  --creme-c:    #DDD0C0;
+  --vert:       #27AE60;
+  --or:         #E67E22;
+  --texte:      #2C1A0E;
+  --gris:       #8A7060;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--texte);min-height:100vh}
+
+/* ── HEADER ─────────────────────────────── */
+.header{
+  background:var(--creme);
+  border-bottom:3px solid var(--rouge-vif);
+  padding:32px 24px 28px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,rgba(192,57,43,.03) 0,rgba(192,57,43,.03) 1px,transparent 1px,transparent 16px);
+}
+.header-badge{
+  display:inline-block;
+  border:1.5px solid var(--rouge-vif);
+  color:var(--rouge-vif);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;letter-spacing:3px;font-weight:700;
+  padding:4px 14px;margin-bottom:12px;text-transform:uppercase;
+  position:relative;
+}
+.header h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(52px,12vw,80px);
+  font-weight:900;
+  color:var(--texte);
+  line-height:.9;
+  text-transform:uppercase;
+  letter-spacing:-2px;
+  position:relative;
+}
+.header h1 em{color:var(--rouge-vif);font-style:normal}
+.header-sub{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;letter-spacing:4px;color:var(--gris);
+  text-transform:uppercase;margin-top:8px;position:relative;
+}
+.header-desc{
+  color:var(--gris);font-size:14px;font-weight:300;
+  margin-top:12px;position:relative;
+}
+
+/* ── PROGRESS BAR ───────────────────────── */
+.progress-wrap{
+  background:var(--creme-b);
+  border-bottom:1px solid var(--creme-c);
+  padding:20px 24px;
+  display:flex;
+  justify-content:center;
+}
+.progress-track{
+  width:100%;max-width:480px;
+  display:flex;align-items:center;
+  justify-content:center;
+}
+.prog-step{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  flex:0 0 auto;
+}
+.prog-dot{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--creme-b);border:2px solid var(--creme-c);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;
+  color:var(--gris);transition:all .35s;
+}
+.prog-dot.active{background:var(--rouge-vif);border-color:var(--rouge-vif);color:white;box-shadow:0 0 14px rgba(192,57,43,.25)}
+.prog-dot.done{background:var(--vert);border-color:var(--vert);color:white}
+.prog-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--gris);
+  transition:color .35s;white-space:nowrap;
+}
+.prog-label.active{color:var(--rouge-vif)}
+.prog-label.done{color:var(--vert)}
+.prog-line{
+  flex:1;height:2px;background:var(--creme-c);
+  margin-bottom:22px;transition:background .35s;
+}
+.prog-line.done{background:var(--vert)}
+
+/* ── MAIN CONTENT ───────────────────────── */
+.content{max-width:680px;margin:0 auto;padding:36px 20px 80px}
+
+/* ── STEP PANELS ────────────────────────── */
+.step-panel{display:none;animation:slideUp .35s ease both}
+.step-panel.active{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--rouge);
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;
+}
+.panel-title::after{content:'';flex:1;height:1px;background:var(--creme-b)}
+
+/* ── FORM FIELDS ────────────────────────── */
+.field{margin-bottom:22px}
+.label{
+  display:block;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gris);margin-bottom:8px;
+}
+.label .opt{font-weight:400;opacity:.55;text-transform:none;letter-spacing:0;font-size:10px}
+input[type=text],input[type=date],select,textarea{
+  width:100%;background:white;
+  border:1.5px solid var(--creme-b);border-radius:5px;
+  padding:13px 15px;
+  font-family:'Barlow',sans-serif;font-size:15px;color:var(--texte);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--rouge);
+  box-shadow:0 0 0 3px rgba(139,26,26,.09);
+}
+textarea{resize:vertical;min-height:85px}
+
+/* ── DISH GRID ──────────────────────────── */
+.cat-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--or);margin:20px 0 10px;
+  display:flex;align-items:center;gap:8px;
+}
+.cat-label::before{content:'';width:18px;height:2px;background:var(--or)}
+.dishes-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+  gap:8px;margin-bottom:4px;
+}
+.dish-card{
+  background:white;border:1.5px solid var(--creme-b);border-radius:7px;
+  padding:11px 14px;cursor:pointer;transition:all .18s;position:relative;
+  user-select:none;
+}
+.dish-card:hover{border-color:var(--rouge);transform:translateY(-1px);box-shadow:0 3px 14px rgba(139,26,26,.1)}
+.dish-card.sel{border-color:var(--rouge);background:rgba(139,26,26,.04)}
+.dish-card.sel::after{
+  content:'✓';position:absolute;top:8px;right:10px;
+  color:var(--rouge);font-weight:700;font-size:13px;
+}
+.dc-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--texte);padding-right:18px}
+.dc-price{font-size:11px;color:#9B8470;margin-top:2px}
+
+/* ── REVIEW CARDS ───────────────────────── */
+.review-card{
+  background:white;
+  border:1.5px solid var(--creme-b);
+  border-left:4px solid var(--rouge);
+  border-radius:8px;padding:20px;margin-bottom:16px;
+}
+.rc-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:19px;font-weight:800;color:var(--rouge);text-transform:uppercase;letter-spacing:.5px;
+}
+.rc-cat{font-size:11px;color:var(--gris);margin-bottom:14px}
+
+.stars-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.stars-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gris);min-width:55px;
+}
+.stars{display:flex;gap:3px}
+.star{
+  font-size:22px;cursor:pointer;
+  color:#DDD5C8;transition:all .12s;line-height:1;
+}
+.star.on{color:#E8A020}
+.star:hover{transform:scale(1.25)}
+.score-badge{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;color:var(--rouge);
+  min-width:44px;
+}
+
+/* ── BUTTONS ────────────────────────────── */
+.btn-row{display:flex;gap:10px;margin-top:28px}
+.btn{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  border:none;border-radius:5px;padding:15px 28px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary{background:var(--rouge);color:white;flex:1}
+.btn-primary:hover{background:var(--rouge-vif);transform:translateY(-1px);box-shadow:0 5px 20px rgba(139,26,26,.3)}
+.btn-ghost{
+  background:transparent;color:var(--rouge);
+  border:2px solid var(--rouge);flex:0 0 auto;padding:13px 24px;
+}
+.btn-ghost:hover{background:rgba(139,26,26,.06)}
+
+/* ── SUCCESS ────────────────────────────── */
+#success{
+  display:none;text-align:center;padding:64px 20px;
+  animation:slideUp .5s ease both;
+}
+.success-icon{font-size:72px;margin-bottom:16px;animation:pop .6s cubic-bezier(.36,1.56,.64,1) both}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+#success h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:48px;font-weight:900;color:var(--vert);text-transform:uppercase;letter-spacing:-1px;
+}
+#success p{color:var(--gris);margin-top:10px;font-size:16px;line-height:1.6}
+#success .btn-primary{margin-top:28px;display:inline-block;padding:15px 40px}
+
+/* ── RESPONSIVE ─────────────────────────── */
+@media(max-width:500px){
+  .dishes-grid{grid-template-columns:1fr 1fr}
+  .stars .star{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Pizza · Pasta · Panuozzo</div>
+  <h1><em>Al</em> Forno</h1>
+  <div class="header-sub">14 rue René Brûlay · Sartrouville</div>
+  <div class="header-desc">Votre avis compte — merci de prendre 2 minutes 🔥</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="prog-step">
+      <div class="prog-dot active" id="pd1">1</div>
+      <div class="prog-label active" id="pl1">Infos</div>
+    </div>
+    <div class="prog-line" id="pline1"></div>
+    <div class="prog-step">
+      <div class="prog-dot" id="pd2">2</div>
+      <div class="prog-label" id="pl2">Plats</div>
+    </div>
+    <div class="prog-line" id="pline2"></div>
+    <div class="prog-step">
+      <div class="prog-dot" id="pd3">3</div>
+      <div class="prog-label" id="pl3">Notes</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div id="form-wrap">
+
+    <!-- STEP 1 -->
+    <div class="step-panel active" id="sp1">
+      <div class="panel-title">👤 Vos informations</div>
+
+      <div class="field">
+        <label class="label">Prénom <span class="opt">(optionnel)</span></label>
+        <input type="text" id="f-name" placeholder="Ex : Marie">
+      </div>
+      <div class="field">
+        <label class="label">Date de visite</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="field">
+        <label class="label">Moment</label>
+        <select id="f-moment">
+          <option value="">— Choisir —</option>
+          <option value="midi">🌞 Déjeuner (midi)</option>
+          <option value="soir">🌙 Dîner (soir)</option>
+        </select>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="next(2)">Choisir mes plats →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-panel" id="sp2">
+      <div class="panel-title">🍽️ Quels plats avez-vous commandés ?</div>
+      <p style="font-size:13px;color:var(--gris);margin-bottom:4px">Sélectionnez tous vos plats du repas.</p>
+      <div id="menu-grid"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="next(1)">← Retour</button>
+        <button class="btn btn-primary" onclick="next(3)">Noter mes plats →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-panel" id="sp3">
+      <div class="panel-title">⭐ Notez vos plats</div>
+      <div id="review-list"></div>
+
+      <div class="field" style="margin-top:8px">
+        <label class="label">Remarque générale <span class="opt">(optionnel)</span></label>
+        <textarea id="f-comment" placeholder="Service, ambiance, suggestions…"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="next(2)">← Retour</button>
+        <button class="btn btn-primary" onclick="submit()">Envoyer mon avis 🔥</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success">
+    <div class="success-icon">🎉</div>
+    <h2>Merci !</h2>
+    <p>Votre avis a bien été enregistré.<br>À très bientôt chez <strong>Al Forno</strong> !</p>
+    <button class="btn btn-primary" onclick="reset()">Laisser un autre avis</button>
+  </div>
+</div>
+
+<script>
+// ── MENU DATA ─────────────────────────────────────────
+const MENU = {
+  "🍕 Pizzas": [
+    {n:"Marinara",p:"8.90"},{n:"Marguerita",p:"9.90"},{n:"Regina",p:"12.90"},
+    {n:"Quattro Fromaggi",p:"12.90"},{n:"Calzone",p:"12.90"},{n:"Napoli",p:"12.90"},
+    {n:"Veggie",p:"12.90"},{n:"Pollo",p:"12.90"},{n:"4 Saisons",p:"12.90"},
+    {n:"Parmigiana",p:"12.90"},{n:"Cheesy",p:"13.90"},{n:"Goat",p:"13.90"},
+    {n:"Orientale",p:"13.90"},{n:"Carbonara",p:"13.90"},{n:"Brooklyn",p:"14.90"},
+    {n:"Tuna",p:"14.90"},{n:"Bresaola",p:"14.90"},{n:"Salmone",p:"14.90"},
+    {n:"Piccante",p:"14.90"},{n:"Al Forno",p:"14.90"},{n:"Tartufo",p:"14.90"},
+    {n:"Burrata",p:"14.90"},{n:"Borsalino",p:"14.90"}
+  ],
+  "🍝 Pasta": [
+    {n:"Mac N'Cheese",p:"6.90"},{n:"Arrabiata",p:"8.90"},{n:"Quattro Formaggi P.",p:"8.90"},
+    {n:"Bolognese",p:"9.90"},{n:"Alfredo",p:"9.90"},{n:"Pesto",p:"9.90"},
+    {n:"Carbonara P.",p:"11.90"},{n:"Tartufo P.",p:"11.90"},{n:"Salmone P.",p:"11.90"}
+  ],
+  "🥙 Panuozzos": [
+    {n:"Italiano",p:"8.90"},{n:"Parigi",p:"9.90"},{n:"Caesar Chicken",p:"10.90"},
+    {n:"Americano",p:"10.90"},{n:"Gusto",p:"10.90"},{n:"Pistacchio",p:"10.90"},
+    {n:"Marsa",p:"10.90"},{n:"Pastrami",p:"11.90"}
+  ],
+  "🧀 Burratas": [
+    {n:"Classica",p:"7.90"},{n:"Pesto B.",p:"8.90"},{n:"Tartufo B.",p:"9.90"}
+  ],
+  "🥗 Salades": [
+    {n:"Verde",p:"3.90"},{n:"Al Tonno",p:"8.90"},{n:"Caesar",p:"9.90"}
+  ],
+  "🫓 À Partager": [
+    {n:"Foccacia",p:"5.90"},{n:"Foccacia Pomodoro",p:"6.90"},
+    {n:"Foccacia Tartufo",p:"8.90"},{n:"Cheesy Bread",p:"6.90"}
+  ],
+  "🍮 Desserts": [
+    {n:"Tiramisu",p:"3.90"},{n:"Panna Cotta",p:"3.90"},
+    {n:"Glace Barattolino",p:"3.90"},{n:"Pizza Nutella",p:"6.90"}
+  ],
+  "🥤 Boissons": [
+    {n:"Eau Bouteille",p:"1.50"},{n:"Mole Cola",p:"2.00"},
+    {n:"Limonade Sicilienne",p:"3.50"},{n:"Estathe Pesca",p:"2.00"},
+    {n:"San Pellegrino Gazeuse",p:"1.80"},{n:"San Pellegrino Boisson",p:"2.00"}
+  ]
+};
+
+const STORAGE_KEY = 'alforno_v3';
+const selected = new Set();
+let curStep = 1;
+
+// ── BUILD MENU GRID ───────────────────────
+function buildMenu() {
+  const wrap = document.getElementById('menu-grid');
+  wrap.innerHTML = '';
+  for (const [cat, items] of Object.entries(MENU)) {
+    const catClean = cat.replace(/[^\w]/g,'').slice(2);
+    const lbl = document.createElement('div');
+    lbl.className = 'cat-label';
+    lbl.textContent = cat;
+    wrap.appendChild(lbl);
+
+    const grid = document.createElement('div');
+    grid.className = 'dishes-grid';
+    items.forEach(item => {
+      const key = catClean + '::' + item.n;
+      const card = document.createElement('div');
+      card.className = 'dish-card' + (selected.has(key) ? ' sel' : '');
+      card.dataset.key = key;
+      card.innerHTML = `<div class="dc-name">${item.n}</div><div class="dc-price">${item.p} €</div>`;
+      card.onclick = () => {
+        selected.has(key) ? selected.delete(key) : selected.add(key);
+        card.classList.toggle('sel');
+      };
+      grid.appendChild(card);
+    });
+    wrap.appendChild(grid);
+  }
+}
+
+// ── BUILD REVIEW CARDS ────────────────────
+function buildReviews() {
+  const wrap = document.getElementById('review-list');
+  wrap.innerHTML = '';
+  selected.forEach(key => {
+    const [cat, name] = key.split('::');
+    const sk = key.replace(/\W/g,'_');
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.dataset.key = key;
+    card.innerHTML = `
+      <div class="rc-name">${name}</div>
+      <div class="rc-cat">${cat}</div>
+      <div class="stars-row">
+        <span class="stars-label">Note</span>
+        <div class="stars" id="st_${sk}">
+          ${[1,2,3,4,5,6,7,8,9,10].map(i=>`<span class="star" onclick="rate('${sk}',${i})">★</span>`).join('')}
+        </div>
+        <span class="score-badge" id="sb_${sk}">—</span>
+      </div>
+      <div class="field">
+        <label class="label">Commentaire <span class="opt">(optionnel)</span></label>
+        <textarea class="dish-txt" placeholder="Avis sur ce plat…" rows="2"></textarea>
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+
+function rate(sk, val) {
+  const el = document.getElementById('st_'+sk);
+  el.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('on', i < val));
+  el.dataset.val = val;
+  document.getElementById('sb_'+sk).textContent = val+'/10';
+}
+
+// ── NAVIGATION ────────────────────────────
+function next(n) {
+  if (n === 3) {
+    if (!selected.size) { alert('Sélectionnez au moins un plat.'); return; }
+    buildReviews();
+  }
+  document.getElementById('sp'+curStep).classList.remove('active');
+  document.getElementById('sp'+n).classList.add('active');
+  curStep = n;
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress() {
+  for (let i=1;i<=3;i++) {
+    const dot = document.getElementById('pd'+i);
+    const lbl = document.getElementById('pl'+i);
+    dot.classList.remove('active','done');
+    lbl.classList.remove('active','done');
+    if (i < curStep) { dot.classList.add('done'); dot.textContent='✓'; lbl.classList.add('done'); }
+    else if (i === curStep) { dot.classList.add('active'); dot.textContent=i; lbl.classList.add('active'); }
+    else { dot.textContent=i; }
+  }
+  for (let i=1;i<=2;i++) {
+    document.getElementById('pline'+i).classList.toggle('done', i < curStep);
+  }
+}
+
+// ── SUBMIT ────────────────────────────────
+function submit() {
+  const reviews = [];
+  let ok = true;
+  document.querySelectorAll('#review-list .review-card').forEach(card => {
+    const key = card.dataset.key;
+    const [cat, name] = key.split('::');
+    const sk = key.replace(/\W/g,'_');
+    const note = parseInt(document.getElementById('st_'+sk).dataset.val || 0);
+    if (!note) { ok = false; return; }
+    reviews.push({ cat, name, note, comment: card.querySelector('.dish-txt').value.trim() });
+  });
+  if (!ok) { alert('Notez tous vos plats avant d\'envoyer.'); return; }
+
+  const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  all.push({
+    id: Date.now(),
+    clientName: document.getElementById('f-name').value.trim() || 'Anonyme',
+    visitDate:  document.getElementById('f-date').value || new Date().toISOString().split('T')[0],
+    visitMoment: document.getElementById('f-moment').value || '',
+    generalComment: document.getElementById('f-comment').value.trim(),
+    reviews,
+    timestamp: new Date().toISOString()
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+
+  document.getElementById('form-wrap').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+}
+
+// ── RESET ─────────────────────────────────
+function reset() {
+  selected.clear();
+  document.getElementById('form-wrap').style.display = '';
+  document.querySelector('.progress-wrap').style.display = '';
+  document.getElementById('success').style.display = 'none';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-moment').value = '';
+  document.getElementById('f-comment').value = '';
+  curStep = 1;
+  next(1);
+}
+
+// ── INIT ──────────────────────────────────
+document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+buildMenu();
+</script>
+</body>
+</html>

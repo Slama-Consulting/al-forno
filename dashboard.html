@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Forno — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rouge:#C0392B;--rouge-vif:#E74C3C;--rouge-pale:#FDECEA;
+  --creme:#FAF7F2;--creme-b:#EDE5D8;--creme-c:#E2D8CA;
+  --blanc:#FFFFFF;--texte:#2C1A0E;--gris:#8A7060;
+  --vert:#27AE60;--or:#E67E22;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--texte);min-height:100vh}
+
+.topbar{
+  background:var(--rouge);padding:16px 28px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(192,57,43,.25);
+}
+.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;color:white}
+.topbar-logo span{color:rgba(255,255,255,.55);font-weight:400;font-size:14px;margin-left:10px;letter-spacing:1px}
+.topbar-sub{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:2px;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.period-pills{display:flex;background:rgba(0,0,0,.15);border-radius:6px;padding:3px;gap:2px}
+.pill{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border:none;background:none;color:rgba(255,255,255,.55);cursor:pointer;border-radius:4px;transition:all .2s}
+.pill.on{background:white;color:var(--rouge)}
+.pill:hover:not(.on){background:rgba(255,255,255,.15);color:white}
+.btn-top{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:8px 16px;cursor:pointer;transition:all .2s}
+.btn-top:hover{background:rgba(255,255,255,.25)}
+
+.main{padding:28px 24px 80px;max-width:1300px;margin:0 auto}
+
+.section-head{display:flex;align-items:center;gap:12px;margin:32px 0 14px}
+.section-head h2{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--rouge);white-space:nowrap}
+.section-head::after{content:'';flex:1;height:1.5px;background:var(--creme-c)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.kpi{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:10px;padding:18px 16px;transition:transform .2s,box-shadow .2s}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(192,57,43,.1)}
+.kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--rouge);line-height:1}
+.kpi-val.md{font-size:20px;line-height:1.2}
+.kpi-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-top:6px}
+.kpi-sub{font-size:11px;color:var(--gris);opacity:.7;margin-top:2px}
+
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-box{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:12px;padding:22px}
+.chart-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rouge);margin-bottom:18px;padding-bottom:10px;border-bottom:1.5px solid var(--creme-b)}
+.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.hbar-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--texte);min-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbar-track{flex:1;height:22px;background:var(--creme);border-radius:4px;overflow:hidden;border:1px solid var(--creme-b)}
+.hbar-fill{height:100%;border-radius:4px;transition:width .9s ease}
+.hbar-val{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--gris);min-width:36px;text-align:right}
+
+.rankings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.rankings-grid{grid-template-columns:1fr}}
+.rank-card{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:12px;overflow:hidden}
+.rank-card-header{background:var(--rouge);padding:14px 18px;display:flex;align-items:center;gap:10px}
+.rank-card-header h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white;flex:1}
+.rank-count{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
+.rank-row{display:grid;grid-template-columns:28px 1fr 58px 58px;align-items:center;gap:8px;padding:11px 18px;border-bottom:1px solid var(--creme-b);transition:background .15s}
+.rank-row:last-child{border-bottom:none}
+.rank-row:hover{background:var(--creme)}
+.rr-pos{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--creme-c);text-align:center}
+.rr-pos.gold{color:#E8A020}.rr-pos.silver{color:#999}.rr-pos.bronze{color:#C8682A}
+.rr-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--texte)}
+.rr-cat{font-size:10px;color:var(--gris)}
+.note-pill{display:inline-block;padding:3px 8px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700}
+.note-h{background:#D5F5E3;color:#1E8449;border:1px solid #A9DFBF}
+.note-m{background:#FEF9E7;color:#B7770D;border:1px solid #F9E79F}
+.note-l{background:var(--rouge-pale);color:var(--rouge);border:1px solid #FADBD8}
+.rr-orders{text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--gris)}
+.bar-wrap{height:5px;background:var(--creme-b);border-radius:3px;margin-top:4px}
+.bar-fill{height:100%;border-radius:3px;background:var(--rouge);transition:width .8s ease}
+
+.cat-block{background:var(--blanc);border:1.5px solid var(--creme-b);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.cat-block-header{display:flex;align-items:center;gap:10px;padding:13px 20px;background:var(--creme);border-bottom:1.5px solid var(--creme-b);cursor:pointer;user-select:none}
+.cat-block-header h3{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--texte);flex:1}
+.cat-block-header .chev{color:var(--gris);font-size:12px;transition:transform .3s}
+.cat-block.closed .chev{transform:rotate(-90deg)}
+.cat-block.closed .cat-block-body{display:none}
+.table-head{display:grid;grid-template-columns:28px 1fr 70px 70px 100px 55px;gap:8px;padding:9px 20px;background:var(--creme);border-bottom:1px solid var(--creme-b);font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gris)}
+.table-row{display:grid;grid-template-columns:28px 1fr 70px 70px 100px 55px;gap:8px;padding:11px 20px;border-bottom:1px solid var(--creme-b);align-items:center;transition:background .15s}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:var(--creme)}
+.tr-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--creme-c);text-align:center}
+.tr-pos.g1{color:#E8A020}.tr-pos.g2{color:#999}.tr-pos.g3{color:#C8682A}
+.tr-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--texte)}
+.tr-cell{text-align:center;font-family:'Barlow Condensed',sans-serif}
+.tr-val{font-size:16px;font-weight:700;color:var(--texte)}
+.tr-sub{font-size:10px;color:var(--gris)}
+.trend-icon{font-size:18px;text-align:center}
+
+.reviews-list{padding:4px 0}
+.rev-item{display:flex;gap:14px;align-items:flex-start;padding:14px 20px;border-bottom:1px solid var(--creme-b);transition:background .15s}
+.rev-item:last-child{border-bottom:none}
+.rev-item:hover{background:var(--creme)}
+.rev-score{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800}
+.rev-body .rname{font-weight:600;font-size:14px;color:var(--texte)}
+.rev-body .rdate{font-size:11px;color:var(--gris);margin-left:6px}
+.dish-tag{display:inline-block;background:var(--rouge-pale);color:var(--rouge);font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;margin:4px 0}
+.rev-comment{font-size:12px;color:var(--gris);font-style:italic;margin-top:3px}
+
+.empty{text-align:center;padding:48px 20px;color:var(--gris)}
+.empty .icon{font-size:40px;margin-bottom:10px;opacity:.5}
+.empty p{font-size:14px}
+
+@media(max-width:600px){
+  .table-head,.table-row{grid-template-columns:24px 1fr 60px 60px}
+  .table-head :nth-child(n+5),.table-row :nth-child(n+5){display:none}
+  .main{padding:16px 14px 60px}
+  .topbar{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-logo">Al Forno <span>· Dashboard</span></div>
+    <div class="topbar-sub">Sartrouville · Statistiques & Avis</div>
+  </div>
+  <div class="topbar-right">
+    <div class="period-pills">
+      <button class="pill" onclick="setPeriod('day',this)">Jour</button>
+      <button class="pill on" onclick="setPeriod('week',this)">Semaine</button>
+      <button class="pill" onclick="setPeriod('month',this)">Mois</button>
+      <button class="pill" onclick="setPeriod('year',this)">Année</button>
+      <button class="pill" onclick="setPeriod('all',this)">Tout</button>
+    </div>
+    <button class="btn-top" onclick="loadDemo()">🎲 Démo</button>
+    <button class="btn-top" onclick="exportCSV()">⬇ CSV</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="section-head"><h2>Vue d'ensemble</h2></div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <div class="section-head"><h2>Répartition</h2></div>
+  <div class="chart-row">
+    <div class="chart-box"><div class="chart-title">🍽️ Top 8 — Plus commandés</div><div id="chart-orders"></div></div>
+    <div class="chart-box"><div class="chart-title">⭐ Top 8 — Mieux notés</div><div id="chart-notes"></div></div>
+  </div>
+
+  <div class="section-head"><h2>Palmarès global</h2></div>
+  <div class="rankings-grid">
+    <div class="rank-card">
+      <div class="rank-card-header"><span>🏆</span><h3>Meilleur → Moins bon</h3><span class="rank-count" id="rc-best"></span></div>
+      <div id="rank-best"></div>
+    </div>
+    <div class="rank-card">
+      <div class="rank-card-header"><span>📦</span><h3>Plus → Moins commandé</h3><span class="rank-count" id="rc-orders"></span></div>
+      <div id="rank-orders"></div>
+    </div>
+  </div>
+
+  <div class="section-head"><h2>Palmares par catégorie</h2></div>
+  <div id="by-category"></div>
+
+  <div class="section-head"><h2>Avis récents</h2></div>
+  <div class="cat-block">
+    <div class="cat-block-header" onclick="toggle(this)">
+      <span>💬</span><h3>Tous les avis</h3>
+      <span id="rev-count" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--rouge);margin-right:8px"></span>
+      <span class="chev">▼</span>
+    </div>
+    <div class="cat-block-body"><div class="reviews-list" id="rev-list"></div></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY='alforno_v3';
+const MENU={"Pizzas":["Marinara","Marguerita","Regina","Quattro Fromaggi","Calzone","Napoli","Veggie","Pollo","4 Saisons","Parmigiana","Cheesy","Goat","Orientale","Carbonara","Brooklyn","Tuna","Bresaola","Salmone","Piccante","Al Forno","Tartufo","Burrata","Borsalino"],"Pasta":["Mac N'Cheese","Arrabiata","Quattro Formaggi P.","Bolognese","Alfredo","Pesto","Carbonara P.","Tartufo P.","Salmone P."],"Panuozzos":["Italiano","Parigi","Caesar Chicken","Americano","Gusto","Pistacchio","Marsa","Pastrami"],"Burratas":["Classica","Pesto B.","Tartufo B."],"Salades":["Verde","Al Tonno","Caesar"],"À Partager":["Foccacia","Foccacia Pomodoro","Foccacia Tartufo","Cheesy Bread"],"Desserts":["Tiramisu","Panna Cotta","Glace Barattolino","Pizza Nutella"],"Boissons":["Eau Bouteille","Mole Cola","Limonade Sicilienne","Estathe Pesca","San Pellegrino Gazeuse","San Pellegrino Boisson"]};
+const CAT_ICONS={"Pizzas":"🍕","Pasta":"🍝","Panuozzos":"🥙","Burratas":"🧀","Salades":"🥗","À Partager":"🫓","Desserts":"🍮","Boissons":"🥤"};
+const CAT_COLORS={"Pizzas":"#C0392B","Pasta":"#E67E22","Panuozzos":"#D4AC0D","Burratas":"#B7950B","Salades":"#1E8449","À Partager":"#A04000","Desserts":"#7D3C98","Boissons":"#1A5276"};
+
+let period='week';
+function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function save(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}
+
+function filterPeriod(data,p){
+  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  return data.filter(e=>{
+    const d=new Date(e.visitDate),day=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    if(p==='day')return day.getTime()===today.getTime();
+    if(p==='week'){const s=new Date(today);s.setDate(today.getDate()-today.getDay());return day>=s;}
+    if(p==='month')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+    if(p==='year')return d.getFullYear()===now.getFullYear();
+    return true;
+  });
+}
+function aggregate(data){
+  const s={};
+  data.forEach(e=>e.reviews.forEach(r=>{
+    const k=r.cat+'::'+r.name;
+    if(!s[k])s[k]={cat:r.cat,name:r.name,notes:[],count:0,total:0};
+    s[k].notes.push(r.note);s[k].count++;s[k].total+=r.note;
+  }));
+  return Object.values(s).map(x=>({...x,avg:x.count?x.total/x.count:0}));
+}
+function nc(n){return n>=8?'note-h':n>=6?'note-m':'note-l';}
+function nbg(n){return n>=8?'#D5F5E3':n>=6?'#FEF9E7':'#FDECEA';}
+function nfg(n){return n>=8?'#1E8449':n>=6?'#B7770D':'#C0392B';}
+function tr(n){return n>=8?'🔥':n>=6?'👍':'⚠️';}
+function pc(i){return i===0?'gold':i===1?'silver':i===2?'bronze':'';}
+function pt(i){return i===0?'g1':i===1?'g2':i===2?'g3':'';}
+
+function render(){
+  const all=load(),data=filterPeriod(all,period),stats=aggregate(data);
+  renderKPI(data,stats,all);renderCharts(stats);renderRankings(stats);renderByCategory(stats);renderReviews(all);
+}
+
+function renderKPI(data,stats,all){
+  const tR=data.length,tD=stats.reduce((s,d)=>s+d.count,0);
+  const avg=tD?(stats.reduce((s,d)=>s+d.total,0)/tD).toFixed(1):'—';
+  const topN=[...stats].sort((a,b)=>b.avg-a.avg)[0];
+  const topO=[...stats].sort((a,b)=>b.count-a.count)[0];
+  const worst=stats.length?[...stats].sort((a,b)=>a.avg-b.avg)[0]:null;
+  document.getElementById('kpi-grid').innerHTML=`
+    <div class="kpi"><div class="kpi-val">${tR}</div><div class="kpi-label">Avis reçus</div><div class="kpi-sub">sur la période</div></div>
+    <div class="kpi"><div class="kpi-val">${tD}</div><div class="kpi-label">Plats notés</div></div>
+    <div class="kpi"><div class="kpi-val">${avg}</div><div class="kpi-label">Note moyenne</div><div class="kpi-sub">/ 10</div></div>
+    <div class="kpi"><div class="kpi-val">${stats.length}</div><div class="kpi-label">Plats différents</div></div>
+    <div class="kpi"><div class="kpi-val md" style="color:var(--vert)">${topN?topN.name:'—'}</div><div class="kpi-label">🏆 Meilleur plat</div><div class="kpi-sub">${topN?topN.avg.toFixed(1)+'/10':''}</div></div>
+    <div class="kpi"><div class="kpi-val md" style="color:var(--or)">${topO?topO.name:'—'}</div><div class="kpi-label">📦 Plus commandé</div><div class="kpi-sub">${topO?topO.count+' fois':''}</div></div>
+    <div class="kpi"><div class="kpi-val md" style="color:var(--rouge)">${worst?worst.name:'—'}</div><div class="kpi-label">⚠️ Moins bien noté</div><div class="kpi-sub">${worst?worst.avg.toFixed(1)+'/10':''}</div></div>
+    <div class="kpi"><div class="kpi-val">${all.length}</div><div class="kpi-label">Total tous avis</div></div>`;
+}
+function renderCharts(stats){
+  const byO=[...stats].sort((a,b)=>b.count-a.count).slice(0,8),mO=byO[0]?.count||1;
+  document.getElementById('chart-orders').innerHTML=byO.length?byO.map(d=>`<div class="hbar-row"><div class="hbar-label">${d.name}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(d.count/mO*100).toFixed(0)}%;background:${CAT_COLORS[d.cat]||'var(--rouge)'}"></div></div><div class="hbar-val">${d.count}</div></div>`).join(''):'<div class="empty"><div class="icon">📦</div><p>Aucune donnée</p></div>';
+  const byN=[...stats].filter(d=>d.count>=1).sort((a,b)=>b.avg-a.avg).slice(0,8);
+  document.getElementById('chart-notes').innerHTML=byN.length?byN.map(d=>`<div class="hbar-row"><div class="hbar-label">${d.name}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(d.avg/10*100).toFixed(0)}%;background:${nfg(d.avg)}"></div></div><div class="hbar-val" style="color:${nfg(d.avg)}">${d.avg.toFixed(1)}</div></div>`).join(''):'<div class="empty"><div class="icon">⭐</div><p>Aucune donnée</p></div>';
+}
+function renderRankings(stats){
+  if(!stats.length){['rank-best','rank-orders'].forEach(id=>{document.getElementById(id).innerHTML='<div class="empty"><div class="icon">🍽️</div><p>Aucune donnée</p></div>';});return;}
+  const byB=[...stats].sort((a,b)=>b.avg-a.avg).slice(0,10);
+  document.getElementById('rc-best').textContent=byB.length+' plats';
+  document.getElementById('rank-best').innerHTML=byB.map((d,i)=>`<div class="rank-row"><div class="rr-pos ${pc(i)}">${i+1}</div><div><div class="rr-name">${d.name}</div><div class="rr-cat">${CAT_ICONS[d.cat]||''} ${d.cat}</div></div><div><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="rr-orders">${d.count}<div style="font-size:10px;color:var(--gris)">cmd</div></div></div>`).join('');
+  const byO=[...stats].sort((a,b)=>b.count-a.count).slice(0,10),mC=byO[0]?.count||1;
+  document.getElementById('rc-orders').textContent=byO.length+' plats';
+  document.getElementById('rank-orders').innerHTML=byO.map((d,i)=>`<div class="rank-row"><div class="rr-pos ${pc(i)}">${i+1}</div><div><div class="rr-name">${d.name}</div><div class="bar-wrap"><div class="bar-fill" style="width:${(d.count/mC*100).toFixed(0)}%"></div></div></div><div><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="rr-orders">${d.count}<div style="font-size:10px;color:var(--gris)">cmd</div></div></div>`).join('');
+}
+function renderByCategory(stats){
+  const wrap=document.getElementById('by-category');
+  wrap.innerHTML='';
+  if(!stats.length){wrap.innerHTML='<div class="empty"><div class="icon">🍽️</div><p>Aucune donnée pour cette période.</p></div>';return;}
+  for(const [cat] of Object.entries(MENU)){
+    const cs=stats.filter(s=>s.cat===cat).sort((a,b)=>b.avg-a.avg);
+    if(!cs.length)continue;
+    const mC=Math.max(...cs.map(d=>d.count)),color=CAT_COLORS[cat]||'var(--rouge)';
+    const block=document.createElement('div');
+    block.className='cat-block';
+    block.innerHTML=`<div class="cat-block-header" onclick="toggle(this)"><span>${CAT_ICONS[cat]||'🍽️'}</span><h3>${cat}</h3><span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:${color};margin-right:8px">${cs.length} plat(s) noté(s)</span><span class="chev">▼</span></div><div class="cat-block-body"><div class="table-head"><div>#</div><div>Plat</div><div style="text-align:center">Note</div><div style="text-align:center">Commandes</div><div style="text-align:center">Popularité</div><div style="text-align:center">Statut</div></div>${cs.map((d,i)=>`<div class="table-row"><div class="tr-pos ${pt(i)}">${i+1}</div><div class="tr-name">${d.name}</div><div class="tr-cell"><span class="note-pill ${nc(d.avg)}">${d.avg.toFixed(1)}</span></div><div class="tr-cell"><div class="tr-val">${d.count}</div><div class="tr-sub">fois</div></div><div class="tr-cell"><div class="bar-wrap" style="margin:0"><div class="bar-fill" style="width:${mC?Math.round(d.count/mC*100):0}%;background:${color}"></div></div><div class="tr-sub">${mC?Math.round(d.count/mC*100):0}%</div></div><div class="trend-icon">${tr(d.avg)}</div></div>`).join('')}</div>`;
+    wrap.appendChild(block);
+  }
+}
+function renderReviews(allData){
+  const flat=[];
+  [...allData].reverse().forEach(e=>e.reviews.forEach(r=>flat.push({...r,clientName:e.clientName,visitDate:e.visitDate,gen:e.generalComment})));
+  document.getElementById('rev-count').textContent=flat.length+' avis';
+  const wrap=document.getElementById('rev-list');
+  if(!flat.length){wrap.innerHTML='<div class="empty"><div class="icon">💬</div><p>Aucun avis pour le moment.</p></div>';return;}
+  wrap.innerHTML=flat.slice(0,30).map(r=>{const comment=r.comment||r.gen;return`<div class="rev-item"><div class="rev-score" style="background:${nbg(r.note)};color:${nfg(r.note)};border:1.5px solid ${nfg(r.note)}40">${r.note}</div><div class="rev-body"><div><span class="rname">${r.clientName}</span><span class="rdate">${new Date(r.visitDate).toLocaleDateString('fr-FR')}</span></div><span class="dish-tag">${CAT_ICONS[r.cat]||''} ${r.name}</span>${comment?`<div class="rev-comment">"${comment}"</div>`:''}</div></div>`;}).join('');
+}
+function toggle(h){h.parentElement.classList.toggle('closed');}
+function setPeriod(p,btn){period=p;document.querySelectorAll('.pill').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render();}
+function exportCSV(){
+  const data=load();if(!data.length){alert('Aucune donnée.');return;}
+  const rows=[['Date','Client','Moment','Catégorie','Plat','Note','Commentaire','Remarque']];
+  data.forEach(e=>e.reviews.forEach(r=>rows.push([e.visitDate,e.clientName,e.visitMoment,r.cat,r.name,r.note,r.comment,e.generalComment])));
+  const csv=rows.map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download='alforno-avis-'+new Date().toISOString().split('T')[0]+'.csv';a.click();
+}
+function loadDemo(){
+  if(load().length&&!confirm('Remplacer par des données de démo ?'))return;
+  const dishes=[{cat:'Pizzas',name:'Al Forno'},{cat:'Pizzas',name:'Brooklyn'},{cat:'Pizzas',name:'Carbonara'},{cat:'Pizzas',name:'Marguerita'},{cat:'Pizzas',name:'Tartufo'},{cat:'Pizzas',name:'Salmone'},{cat:'Pizzas',name:'Borsalino'},{cat:'Pizzas',name:'Piccante'},{cat:'Pasta',name:'Bolognese'},{cat:'Pasta',name:'Carbonara P.'},{cat:'Pasta',name:'Tartufo P.'},{cat:'Pasta',name:'Alfredo'},{cat:'Panuozzos',name:'Pistacchio'},{cat:'Panuozzos',name:'Italiano'},{cat:'Panuozzos',name:'Pastrami'},{cat:'Burratas',name:'Tartufo B.'},{cat:'Desserts',name:'Tiramisu'},{cat:'Desserts',name:'Pizza Nutella'},{cat:'Boissons',name:'Limonade Sicilienne'},{cat:'Salades',name:'Caesar'}];
+  const names=['Sophie','Marc','Leila','Thomas','Camille','Karim','Julie','Romain','Yasmine','Pierre'];
+  const comments=['Excellent !','Vraiment délicieux','À refaire !','Parfait, bravo !','Super saveur','Mon préféré ici !','','','Très bon rapport qualité prix'];
+  const demo=[];
+  for(let i=0;i<60;i++){
+    const d=new Date();d.setDate(d.getDate()-Math.floor(Math.random()*90));
+    const n=Math.floor(Math.random()*3)+1;
+    const chosen=[...dishes].sort(()=>Math.random()-.5).slice(0,n);
+    demo.push({id:Date.now()-i*1000,clientName:names[Math.floor(Math.random()*names.length)],visitDate:d.toISOString().split('T')[0],visitMoment:Math.random()>.4?'soir':'midi',generalComment:Math.random()>.6?comments[Math.floor(Math.random()*comments.length)]:'',reviews:chosen.map(dish=>({cat:dish.cat,name:dish.name,note:Math.min(10,Math.max(4,Math.floor(Math.random()*4)+6)),comment:Math.random()>.5?comments[Math.floor(Math.random()*comments.length)]:''})),timestamp:d.toISOString()});
+  }
+  save(demo);render();
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Forno — QR Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --rouge: #8B1A1A;
+    --creme: #F5F0E8;
+    --creme-fonce: #E8E0D0;
+    --vert: #2D5A27;
+    --or: #C8A96E;
+    --noir: #1A1208;
+    --texte: #2C1A0E;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Barlow',sans-serif; background:var(--creme); color:var(--texte); min-height:100vh; padding:40px 24px 80px; }
+
+  .container { max-width:860px; margin:0 auto; }
+
+  h1 { font-family:'Barlow Condensed',sans-serif; font-size:48px; font-weight:800; color:var(--rouge); text-transform:uppercase; letter-spacing:-1px; }
+  .tagline { font-size:14px; color:#9B8470; margin-bottom:40px; }
+
+  /* Steps guide */
+  .guide { background:white; border:1.5px solid var(--creme-fonce); border-radius:12px; padding:32px; margin-bottom:40px; }
+  .guide h2 { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--rouge); margin-bottom:20px; }
+  .step { display:flex; gap:16px; align-items:flex-start; margin-bottom:20px; }
+  .step-num { width:32px; height:32px; border-radius:50%; background:var(--rouge); color:white; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:14px; flex-shrink:0; }
+  .step-content h3 { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:#6B5744; line-height:1.6; }
+  .code-block { background:var(--noir); color:#A8D8A0; font-family:monospace; font-size:13px; padding:10px 14px; border-radius:6px; margin-top:8px; word-break:break-all; }
+  .link { color:var(--rouge); font-weight:600; }
+  .tag { display:inline-block; background:rgba(139,26,26,0.1); color:var(--rouge); font-size:11px; font-weight:700; padding:2px 8px; border-radius:3px; font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; }
+
+  /* URL input */
+  .url-section { background:white; border:1.5px solid var(--creme-fonce); border-radius:12px; padding:32px; margin-bottom:32px; }
+  .url-section h2 { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--rouge); margin-bottom:16px; }
+  .url-row { display:flex; gap:10px; }
+  .url-input { flex:1; background:var(--creme); border:2px solid var(--creme-fonce); border-radius:6px; padding:13px 16px; font-family:'Barlow',sans-serif; font-size:14px; color:var(--texte); outline:none; transition:border-color 0.2s; }
+  .url-input:focus { border-color:var(--rouge); }
+  .btn-gen { background:var(--rouge); color:white; border:none; padding:13px 28px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; border-radius:6px; transition:all 0.2s; white-space:nowrap; }
+  .btn-gen:hover { background:#B22222; transform:translateY(-1px); }
+
+  /* QR output */
+  #qr-output { display:none; animation:fadeIn 0.4s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  .qr-layout { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media(max-width:600px) { .qr-layout{grid-template-columns:1fr;} .url-row{flex-direction:column;} }
+
+  /* QR card — printable */
+  .qr-card {
+    background:white;
+    border:2px solid var(--creme-fonce);
+    border-radius:12px;
+    padding:28px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  .qr-card-top { font-family:'Barlow Condensed',sans-serif; }
+  .qr-restaurant { font-size:28px; font-weight:800; color:var(--rouge); text-transform:uppercase; letter-spacing:-0.5px; line-height:1; }
+  .qr-sub { font-size:11px; font-weight:700; letter-spacing:3px; color:#9B8470; text-transform:uppercase; margin-top:4px; }
+  #qr-canvas { border:3px solid var(--creme-fonce); border-radius:8px; padding:10px; background:white; }
+  .qr-cta { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--texte); }
+  .qr-cta span { font-size:18px; }
+  .qr-url-display { font-size:10px; color:#B0A090; word-break:break-all; max-width:200px; }
+
+  /* Actions */
+  .qr-actions { display:flex; flex-direction:column; gap:12px; }
+  .btn-action { padding:14px 20px; border-radius:6px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; border:none; text-align:center; }
+  .btn-dl { background:var(--rouge); color:white; }
+  .btn-dl:hover { background:#B22222; }
+  .btn-print { background:var(--noir); color:white; }
+  .btn-print:hover { background:#333; }
+  .btn-copy { background:white; color:var(--texte); border:2px solid var(--creme-fonce); }
+  .btn-copy:hover { border-color:var(--rouge); color:var(--rouge); }
+  .btn-action .icon { margin-right:8px; }
+
+  .info-box { background:rgba(45,90,39,0.07); border:1.5px solid rgba(45,90,39,0.2); border-radius:8px; padding:14px 16px; font-size:13px; color:#2D5A27; margin-top:8px; }
+  .info-box strong { font-weight:600; }
+
+  @media print {
+    body { background:white; padding:0; }
+    .guide, .url-section, .qr-actions, h1, .tagline { display:none !important; }
+    #qr-output { display:block !important; }
+    .qr-layout { grid-template-columns:1fr; max-width:320px; margin:40px auto; }
+    .qr-actions { display:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🍕 Générateur QR Code</h1>
+  <p class="tagline">Al Forno · Formulaire client</p>
+
+  <!-- Guide GitHub Pages -->
+  <div class="guide">
+    <h2>📋 Comment mettre en ligne sur GitHub Pages (gratuit)</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Créer un compte GitHub</h3>
+        <p>Va sur <span class="link">github.com</span> et crée un compte gratuit si tu n'en as pas.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Créer un nouveau dépôt</h3>
+        <p>Clique sur <strong>New repository</strong>. Donne-lui un nom simple, ex : <span class="tag">alforno-avis</span>. Coche <strong>"Add a README file"</strong>. Clique <strong>Create repository</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Uploader le fichier avis.html</h3>
+        <p>Dans ton dépôt, clique <strong>Add file → Upload files</strong>. Glisse le fichier <span class="tag">avis.html</span> que tu as téléchargé. Clique <strong>Commit changes</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Activer GitHub Pages</h3>
+        <p>Va dans <strong>Settings → Pages</strong>. Sous "Source", choisis <strong>Deploy from a branch → main → / (root)</strong>. Clique <strong>Save</strong>. Attends ~1 minute.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h3>Ton URL sera :</h3>
+        <div class="code-block">https://TON-USERNAME.github.io/alforno-avis/avis.html</div>
+        <p style="margin-top:8px;">Remplace <strong>TON-USERNAME</strong> par ton nom d'utilisateur GitHub.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 Conseil :</strong> Le fichier <strong>al-forno-avis.html</strong> (avec le dashboard) reste sur ton ordinateur — tu ne le mets PAS sur GitHub. Seul <strong>avis.html</strong> est public.
+    </div>
+  </div>
+
+  <!-- URL input -->
+  <div class="url-section">
+    <h2>🔗 Génère ton QR Code</h2>
+    <p style="font-size:13px;color:#6B5744;margin-bottom:16px;">Entre l'URL de ta page GitHub Pages ci-dessous :</p>
+    <div class="url-row">
+      <input class="url-input" id="url-input" type="text"
+        placeholder="https://ton-username.github.io/alforno-avis/avis.html"
+        value="">
+      <button class="btn-gen" onclick="generateQR()">Générer →</button>
+    </div>
+  </div>
+
+  <!-- QR Output -->
+  <div id="qr-output">
+    <div class="qr-layout">
+
+      <!-- QR Card -->
+      <div class="qr-card" id="printable-card">
+        <div class="qr-card-top">
+          <div style="font-size:28px;margin-bottom:4px;">🍕</div>
+          <div class="qr-restaurant">Al Forno</div>
+          <div class="qr-sub">Sartrouville</div>
+        </div>
+        <div id="qr-canvas"></div>
+        <div class="qr-cta"><span>📲</span> Scannez pour donner votre avis</div>
+        <div class="qr-url-display" id="qr-url-display"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="qr-actions">
+        <p style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9B8470;margin-bottom:4px;">Actions</p>
+
+        <button class="btn-action btn-dl" onclick="downloadQR()">
+          <span class="icon">⬇</span> Télécharger PNG
+        </button>
+        <button class="btn-action btn-print" onclick="window.print()">
+          <span class="icon">🖨</span> Imprimer
+        </button>
+        <button class="btn-action btn-copy" onclick="copyURL()">
+          <span class="icon">📋</span> Copier l'URL
+        </button>
+
+        <div class="info-box" style="margin-top:4px;">
+          <strong>💡 À imprimer</strong> et à poser sur chaque table — tes clients scannent et laissent leur avis instantanément !
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentURL = '';
+
+function generateQR() {
+  const url = document.getElementById('url-input').value.trim();
+  if (!url || !url.startsWith('http')) {
+    alert('Merci d\'entrer une URL valide commençant par https://');
+    return;
+  }
+  currentURL = url;
+
+  // Clear previous
+  const container = document.getElementById('qr-canvas');
+  container.innerHTML = '';
+
+  new QRCode(container, {
+    text: url,
+    width: 200,
+    height: 200,
+    colorDark: '#1A1208',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  document.getElementById('qr-url-display').textContent = url;
+  document.getElementById('qr-output').style.display = 'block';
+  document.getElementById('qr-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function downloadQR() {
+  setTimeout(() => {
+    const canvas = document.querySelector('#qr-canvas canvas');
+    if (!canvas) { alert('QR Code non généré'); return; }
+
+    // Create a combined canvas with branding
+    const out = document.createElement('canvas');
+    out.width = 340;
+    out.height = 440;
+    const ctx = out.getContext('2d');
+
+    // Background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, out.width, out.height);
+
+    // Border
+    ctx.strokeStyle = '#E8E0D0';
+    ctx.lineWidth = 3;
+    ctx.roundRect(4, 4, out.width-8, out.height-8, 12);
+    ctx.stroke();
+
+    // Restaurant name
+    ctx.fillStyle = '#8B1A1A';
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('🍕 AL FORNO', out.width/2, 52);
+
+    ctx.fillStyle = '#9B8470';
+    ctx.font = '13px Arial';
+    ctx.fillText('SARTROUVILLE', out.width/2, 74);
+
+    // QR
+    ctx.drawImage(canvas, 70, 90, 200, 200);
+
+    // CTA
+    ctx.fillStyle = '#1A1208';
+    ctx.font = 'bold 16px Arial';
+    ctx.fillText('📲 Scannez pour donner votre avis', out.width/2, 322);
+
+    ctx.fillStyle = '#B0A090';
+    ctx.font = '10px Arial';
+    const shortURL = currentURL.length > 45 ? currentURL.substring(0,42)+'...' : currentURL;
+    ctx.fillText(shortURL, out.width/2, 345);
+
+    // Bottom line
+    ctx.fillStyle = '#8B1A1A';
+    ctx.fillRect(20, 370, out.width-40, 3);
+
+    ctx.fillStyle = '#9B8470';
+    ctx.font = '11px Arial';
+    ctx.fillText('Merci pour votre visite !', out.width/2, 400);
+
+    const link = document.createElement('a');
+    link.download = 'alforno-qrcode.png';
+    link.href = out.toDataURL('image/png');
+    link.click();
+  }, 300);
+}
+
+function copyURL() {
+  navigator.clipboard.writeText(currentURL).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<span class="icon">✅</span> Copié !';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+  });
+}
+</script>
+</body>
+</html>
