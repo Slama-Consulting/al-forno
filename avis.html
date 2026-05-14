@@ -3,251 +3,323 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al Forno — Donnez votre avis</title>
+<title>Al Forno — Votre avis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Barlow:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --rouge:      #C0392B;
-  --rouge-vif:  #E74C3C;
-  --creme:      #FAF7F2;
-  --creme-b:    #EDE5D8;
-  --creme-c:    #DDD0C0;
-  --vert:       #27AE60;
-  --or:         #E67E22;
-  --texte:      #2C1A0E;
-  --gris:       #8A7060;
+:root{
+  --ink:#241410; --ink-2:#3d2418; --mute:#8a7558;
+  --rosso:#a82424; --rosso-deep:#811919; --rosso-soft:#c43838; --rosso-ink:#5d0d0d;
+  --cream:#f3e8c8; --cream-2:#ebe0b8; --cream-3:#d8c9a0; --paper:#faf2dc;
+  --ochre:#c4923a; --gold:#d8a020; --leaf:#1c4a2d;
+  --logo:'Bebas Neue',sans-serif;
+  --cond:'Barlow Condensed',sans-serif;
+  --serif:'Barlow Condensed',sans-serif;
+  --sans:'Barlow',sans-serif;
+  --mono:'DM Mono',monospace;
 }
+body{-webkit-font-smoothing:antialiased}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--texte);min-height:100vh}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);min-height:100vh}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:repeating-linear-gradient(0deg,rgba(26,15,10,.018) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply;
+}
 
-/* ── HEADER ─────────────────────────────── */
+/* ── HEADER ── */
 .header{
-  background:var(--creme);
-  border-bottom:3px solid var(--rouge-vif);
-  padding:32px 24px 28px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  position:relative;z-index:1;
+  background:var(--cream);
+  border-bottom:1px solid var(--cream-3);
+  padding:22px 24px 24px;
 }
-.header::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(45deg,rgba(192,57,43,.03) 0,rgba(192,57,43,.03) 1px,transparent 1px,transparent 16px);
+.header-inner{max-width:780px;margin:0 auto}
+.h-row{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);
 }
-.header-badge{
-  display:inline-block;
-  border:1.5px solid var(--rouge-vif);
-  color:var(--rouge-vif);
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;letter-spacing:3px;font-weight:700;
-  padding:4px 14px;margin-bottom:12px;text-transform:uppercase;
-  position:relative;
+.h-row .left{display:flex;align-items:center;gap:10px}
+.h-row .dot{width:7px;height:7px;border-radius:50%;background:var(--rosso);box-shadow:0 0 0 3px rgba(178,31,31,.14)}
+.h-title{
+  font-family:var(--logo);font-weight:400;
+  font-size:clamp(56px,10vw,108px);
+  line-height:.9;letter-spacing:.02em;color:var(--ink);
+  margin:18px 0 8px;text-transform:uppercase;white-space:nowrap;
 }
-.header h1{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:clamp(52px,12vw,80px);
-  font-weight:900;
-  color:var(--texte);
-  line-height:.9;
-  text-transform:uppercase;
-  letter-spacing:-2px;
-  position:relative;
+.h-title .it{color:var(--rosso)}
+.h-sub{
+  font-family:var(--cond);font-weight:600;
+  font-size:17px;color:var(--ink-2);
+  text-transform:uppercase;letter-spacing:.08em;
 }
-.header h1 em{color:var(--rouge-vif);font-style:normal}
-.header-sub{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;letter-spacing:4px;color:var(--gris);
-  text-transform:uppercase;margin-top:8px;position:relative;
-}
-.header-desc{
-  color:var(--gris);font-size:14px;font-weight:300;
-  margin-top:12px;position:relative;
-}
+.h-sub b{color:var(--rosso);font-weight:700;font-style:italic}
 
-/* ── PROGRESS BAR ───────────────────────── */
+/* ── PROGRESS ── */
 .progress-wrap{
-  background:var(--creme-b);
-  border-bottom:1px solid var(--creme-c);
-  padding:20px 24px;
-  display:flex;
-  justify-content:center;
+  position:relative;z-index:1;
+  background:var(--paper);
+  border-bottom:1px solid var(--cream-3);
+  padding:18px 24px;
 }
 .progress-track{
-  width:100%;max-width:480px;
+  max-width:540px;margin:0 auto;
   display:flex;align-items:center;
-  justify-content:center;
 }
-.prog-step{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  flex:0 0 auto;
-}
+.prog-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:0 0 auto}
 .prog-dot{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--creme-b);border:2px solid var(--creme-c);
+  width:36px;height:36px;border-radius:50%;
+  background:var(--paper);border:1.5px solid var(--cream-3);
   display:flex;align-items:center;justify-content:center;
-  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;
-  color:var(--gris);transition:all .35s;
+  font-family:var(--cond);font-weight:800;font-size:17px;
+  color:var(--mute);transition:all .35s;
 }
-.prog-dot.active{background:var(--rouge-vif);border-color:var(--rouge-vif);color:white;box-shadow:0 0 14px rgba(192,57,43,.25)}
-.prog-dot.done{background:var(--vert);border-color:var(--vert);color:white}
+.prog-dot.active{background:var(--rosso);border-color:var(--rosso);color:var(--paper);box-shadow:0 0 0 5px rgba(178,31,31,.14)}
+.prog-dot.done{background:var(--leaf);border-color:var(--leaf);color:var(--paper)}
 .prog-label{
-  font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;
-  letter-spacing:1.5px;text-transform:uppercase;color:var(--gris);
-  transition:color .35s;white-space:nowrap;
+  font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--mute);transition:color .35s;white-space:nowrap;
 }
-.prog-label.active{color:var(--rouge-vif)}
-.prog-label.done{color:var(--vert)}
-.prog-line{
-  flex:1;height:2px;background:var(--creme-c);
-  margin-bottom:22px;transition:background .35s;
-}
-.prog-line.done{background:var(--vert)}
+.prog-label.active{color:var(--rosso)}
+.prog-label.done{color:var(--leaf)}
+.prog-line{flex:1;height:1px;background:var(--cream-3);margin-bottom:24px;transition:background .35s;position:relative}
+.prog-line.done{background:var(--leaf)}
 
-/* ── MAIN CONTENT ───────────────────────── */
-.content{max-width:680px;margin:0 auto;padding:36px 20px 80px}
+/* ── CONTENT ── */
+.content{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:44px 24px 88px}
 
-/* ── STEP PANELS ────────────────────────── */
 .step-panel{display:none;animation:slideUp .35s ease both}
 .step-panel.active{display:block}
-@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 .panel-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:3px;
-  text-transform:uppercase;color:var(--rouge);
-  margin-bottom:24px;
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:baseline;gap:14px;margin-bottom:28px;
 }
-.panel-title::after{content:'';flex:1;height:1px;background:var(--creme-b)}
+.panel-num{
+  font-family:var(--logo);font-weight:400;font-size:54px;
+  color:var(--ochre);line-height:1;letter-spacing:.04em;
+}
+.panel-h{
+  font-family:var(--logo);font-weight:400;
+  font-size:42px;line-height:1;color:var(--ink);letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.panel-h b{color:var(--rosso)}
+.panel-desc{
+  font-family:var(--cond);font-weight:500;font-size:16px;color:var(--ink-2);
+  margin:-12px 0 24px 64px;max-width:52ch;letter-spacing:.01em;
+}
 
-/* ── FORM FIELDS ────────────────────────── */
+/* ── FORM FIELDS ── */
 .field{margin-bottom:22px}
 .label{
   display:block;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:var(--gris);margin-bottom:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:8px;
 }
-.label .opt{font-weight:400;opacity:.55;text-transform:none;letter-spacing:0;font-size:10px}
+.label .opt{font-weight:400;color:var(--cream-3);letter-spacing:.18em;margin-left:6px}
 input[type=text],input[type=date],select,textarea{
-  width:100%;background:white;
-  border:1.5px solid var(--creme-b);border-radius:5px;
-  padding:13px 15px;
-  font-family:'Barlow',sans-serif;font-size:15px;color:var(--texte);
-  outline:none;transition:border-color .2s,box-shadow .2s;
-  -webkit-appearance:none;
+  width:100%;background:var(--paper);
+  border:1px solid var(--cream-3);border-radius:3px;
+  padding:14px 16px;
+  font-family:var(--sans);font-size:15px;color:var(--ink);
+  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
+  -webkit-appearance:none;appearance:none;
 }
 input:focus,select:focus,textarea:focus{
-  border-color:var(--rouge);
-  box-shadow:0 0 0 3px rgba(139,26,26,.09);
+  border-color:var(--rosso);
+  background:white;
+  box-shadow:0 0 0 3px rgba(178,31,31,.1);
 }
-textarea{resize:vertical;min-height:85px}
+select{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%238a7558' d='M6 8 0 0h12z'/></svg>");
+  background-repeat:no-repeat;background-position:right 16px center;padding-right:38px;
+}
+textarea{resize:vertical;min-height:90px;font-family:var(--sans)}
 
-/* ── DISH GRID ──────────────────────────── */
-.cat-label{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:var(--or);margin:20px 0 10px;
-  display:flex;align-items:center;gap:8px;
+/* ── moment chips ── */
+.chip-row{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  flex:1;min-width:140px;
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;
+  padding:14px 16px;cursor:pointer;text-align:center;
+  font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-2);
+  transition:all .15s;user-select:none;
 }
-.cat-label::before{content:'';width:18px;height:2px;background:var(--or)}
+.chip:hover{border-color:var(--rosso);color:var(--rosso)}
+.chip.sel{background:var(--rosso);border-color:var(--rosso);color:var(--paper)}
+.chip .chip-it{font-family:var(--cond);font-weight:700;margin-right:6px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.chip.sel .chip-it{color:rgba(243,232,200,.7)}
+
+/* ── DISH GRID ── */
+.cat-block{margin-bottom:22px}
+.cat-label{
+  display:flex;align-items:baseline;gap:12px;
+  margin:14px 0 12px;padding-bottom:6px;
+  border-bottom:1px solid var(--cream-3);
+}
+.cat-name{
+  font-family:var(--logo);font-weight:400;
+  font-size:30px;color:var(--ink);letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.cat-count{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);margin-left:auto;
+}
 .dishes-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
-  gap:8px;margin-bottom:4px;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:8px;
 }
 .dish-card{
-  background:white;border:1.5px solid var(--creme-b);border-radius:7px;
-  padding:11px 14px;cursor:pointer;transition:all .18s;position:relative;
-  user-select:none;
+  background:var(--paper);border:1px solid var(--cream-3);border-radius:3px;
+  padding:13px 14px;cursor:pointer;transition:all .15s;position:relative;
+  user-select:none;display:flex;justify-content:space-between;align-items:baseline;gap:10px;
 }
-.dish-card:hover{border-color:var(--rouge);transform:translateY(-1px);box-shadow:0 3px 14px rgba(139,26,26,.1)}
-.dish-card.sel{border-color:var(--rouge);background:rgba(139,26,26,.04)}
+.dish-card:hover{border-color:var(--rosso);transform:translateY(-1px)}
+.dish-card.sel{
+  background:rgba(178,31,31,.06);border-color:var(--rosso);
+  box-shadow:inset 3px 0 0 var(--rosso);
+}
 .dish-card.sel::after{
-  content:'✓';position:absolute;top:8px;right:10px;
-  color:var(--rouge);font-weight:700;font-size:13px;
+  content:'';position:absolute;top:10px;right:12px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--rosso);
 }
-.dc-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--texte);padding-right:18px}
-.dc-price{font-size:11px;color:#9B8470;margin-top:2px}
+.dish-card.sel::before{
+  content:'';position:absolute;top:14px;right:16px;width:6px;height:3px;
+  border-left:1.5px solid var(--paper);border-bottom:1.5px solid var(--paper);
+  transform:rotate(-45deg);z-index:1;
+}
+.dc-name{
+  font-family:var(--cond);font-weight:700;font-size:15px;color:var(--ink);
+  line-height:1.15;padding-right:18px;text-transform:uppercase;letter-spacing:.04em;
+}
+.dc-price{
+  font-family:var(--mono);font-size:11px;color:var(--mute);white-space:nowrap;
+}
 
-/* ── REVIEW CARDS ───────────────────────── */
+/* ── REVIEW CARDS ── */
 .review-card{
-  background:white;
-  border:1.5px solid var(--creme-b);
-  border-left:4px solid var(--rouge);
-  border-radius:8px;padding:20px;margin-bottom:16px;
+  background:var(--paper);
+  border:1px solid var(--cream-3);
+  border-radius:3px;padding:22px 24px;margin-bottom:14px;
+  position:relative;
 }
+.review-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rosso);
+}
+.rc-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:14px}
 .rc-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:19px;font-weight:800;color:var(--rouge);text-transform:uppercase;letter-spacing:.5px;
+  font-family:var(--logo);font-weight:400;
+  font-size:28px;color:var(--ink);letter-spacing:.04em;
+  text-transform:uppercase;
 }
-.rc-cat{font-size:11px;color:var(--gris);margin-bottom:14px}
+.rc-cat{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--mute);
+}
 
-.stars-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.stars-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
 .stars-label{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--gris);min-width:55px;
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);min-width:50px;
 }
-.stars{display:flex;gap:3px}
+.stars{display:flex;gap:2px}
 .star{
-  font-size:22px;cursor:pointer;
-  color:#DDD5C8;transition:all .12s;line-height:1;
+  font-size:24px;cursor:pointer;
+  color:var(--cream-3);transition:all .12s;line-height:1;
+  font-family:var(--serif);
 }
-.star.on{color:#E8A020}
-.star:hover{transform:scale(1.25)}
+.star.on{color:var(--gold)}
+.star:hover{transform:scale(1.2)}
 .score-badge{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;font-weight:800;color:var(--rouge);
-  min-width:44px;
+  font-family:var(--cond);font-weight:800;
+  font-size:24px;color:var(--rosso);min-width:60px;letter-spacing:.01em;
 }
+.score-badge .denom{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--mute);letter-spacing:.1em}
 
-/* ── BUTTONS ────────────────────────────── */
-.btn-row{display:flex;gap:10px;margin-top:28px}
+/* ── BUTTONS ── */
+.btn-row{display:flex;gap:10px;margin-top:32px}
 .btn{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
-  border:none;border-radius:5px;padding:15px 28px;cursor:pointer;
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  border:none;border-radius:3px;padding:16px 28px;cursor:pointer;
   transition:all .2s;
 }
-.btn-primary{background:var(--rouge);color:white;flex:1}
-.btn-primary:hover{background:var(--rouge-vif);transform:translateY(-1px);box-shadow:0 5px 20px rgba(139,26,26,.3)}
+.btn-primary{background:var(--rosso);color:var(--paper);flex:1;letter-spacing:.22em}
+.btn-primary:hover{background:var(--rosso-deep);transform:translateY(-1px);box-shadow:0 12px 30px -12px rgba(89,15,15,.6)}
+.btn-primary .arrow{font-family:var(--serif);font-style:italic;font-size:14px;margin-left:8px;letter-spacing:0}
 .btn-ghost{
-  background:transparent;color:var(--rouge);
-  border:2px solid var(--rouge);flex:0 0 auto;padding:13px 24px;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--cream-3);flex:0 0 auto;padding:16px 22px;
 }
-.btn-ghost:hover{background:rgba(139,26,26,.06)}
+.btn-ghost:hover{border-color:var(--rosso);color:var(--rosso)}
 
-/* ── SUCCESS ────────────────────────────── */
+/* ── SUCCESS ── */
 #success{
-  display:none;text-align:center;padding:64px 20px;
-  animation:slideUp .5s ease both;
+  display:none;text-align:center;padding:80px 20px 60px;
+  animation:slideUp .5s ease both;position:relative;z-index:1;max-width:600px;margin:0 auto;
 }
-.success-icon{font-size:72px;margin-bottom:16px;animation:pop .6s cubic-bezier(.36,1.56,.64,1) both}
+.success-mark{
+  width:88px;height:88px;border-radius:50%;
+  background:var(--leaf);color:var(--cream);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--cond);font-size:54px;font-weight:800;
+  margin-bottom:24px;
+  animation:pop .6s cubic-bezier(.36,1.56,.64,1) both;
+  box-shadow:0 0 0 8px rgba(28,74,45,.16);
+}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 #success h2{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:48px;font-weight:900;color:var(--vert);text-transform:uppercase;letter-spacing:-1px;
+  font-family:var(--logo);font-weight:400;
+  font-size:84px;color:var(--ink);letter-spacing:.04em;line-height:.95;
+  text-transform:uppercase;
 }
-#success p{color:var(--gris);margin-top:10px;font-size:16px;line-height:1.6}
-#success .btn-primary{margin-top:28px;display:inline-block;padding:15px 40px}
+#success h2 b{color:var(--rosso)}
+#success p{
+  font-family:var(--cond);font-weight:500;font-size:18px;
+  color:var(--ink-2);margin-top:14px;line-height:1.5;max-width:34ch;margin-left:auto;margin-right:auto;letter-spacing:.01em;
+}
+#success .btn-primary{margin-top:34px;display:inline-flex;align-items:center;padding:16px 40px;flex:0 0 auto}
+.success-back{
+  margin-top:18px;display:block;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);text-decoration:none;
+}
+.success-back:hover{color:var(--rosso)}
 
-/* ── RESPONSIVE ─────────────────────────── */
-@media(max-width:500px){
+@media(max-width:520px){
   .dishes-grid{grid-template-columns:1fr 1fr}
-  .stars .star{font-size:18px}
+  .stars .star{font-size:20px}
+  .panel-num{font-size:32px}
+  .panel-h{font-size:24px}
+  .panel-desc{margin-left:0;margin-top:8px}
+  .rc-name{font-size:20px}
+  #success h2{font-size:46px}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-badge">Pizza · Pasta · Panuozzo</div>
-  <h1><em>Al</em> Forno</h1>
-  <div class="header-sub">14 rue René Brûlay · Sartrouville</div>
-  <div class="header-desc">Votre avis compte — merci de prendre 2 minutes 🔥</div>
-</div>
+<header class="header">
+  <div class="header-inner">
+    <div class="h-row">
+      <div class="left">
+        <span class="dot"></span>
+        <span style="font-family:var(--logo);font-size:18px;letter-spacing:.06em;color:var(--rosso)">AL FORNO</span>
+        <span style="color:var(--cream-3)">·</span>
+        <span>Sartrouville</span>
+      </div>
+      <a href="index.html" style="color:var(--mute);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase">← Accueil</a>
+    </div>
+    <h1 class="h-title"><span class="it">Votre</span> avis</h1>
+    <p class="h-sub">Deux minutes pour nous dire ce que vous avez aimé, <b>ou pas</b>.</p>
+  </div>
+</header>
 
 <div class="progress-wrap">
   <div class="progress-track">
@@ -268,76 +340,92 @@ textarea{resize:vertical;min-height:85px}
   </div>
 </div>
 
-<div class="content">
+<main class="content">
   <div id="form-wrap">
 
     <!-- STEP 1 -->
-    <div class="step-panel active" id="sp1">
-      <div class="panel-title">👤 Vos informations</div>
+    <section class="step-panel active" id="sp1">
+      <div class="panel-title">
+        <span class="panel-num">01</span>
+        <h2 class="panel-h">Vos <b>infos</b></h2>
+      </div>
+      <p class="panel-desc">Tout est facultatif — c'est juste pour mieux comprendre votre visite.</p>
 
       <div class="field">
-        <label class="label">Prénom <span class="opt">(optionnel)</span></label>
-        <input type="text" id="f-name" placeholder="Ex : Marie">
+        <label class="label">Prénom <span class="opt">(facultatif)</span></label>
+        <input type="text" id="f-name" placeholder="Marie, Tommaso, …">
       </div>
+
       <div class="field">
         <label class="label">Date de visite</label>
         <input type="date" id="f-date">
       </div>
+
       <div class="field">
         <label class="label">Moment</label>
-        <select id="f-moment">
-          <option value="">— Choisir —</option>
-          <option value="midi">🌞 Déjeuner (midi)</option>
-          <option value="soir">🌙 Dîner (soir)</option>
-        </select>
+        <div class="chip-row" id="moment-row">
+          <div class="chip" data-val="midi"><span class="chip-it">au</span>Déjeuner</div>
+          <div class="chip" data-val="soir"><span class="chip-it">au</span>Dîner</div>
+        </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-primary" onclick="next(2)">Choisir mes plats →</button>
+        <button class="btn btn-primary" onclick="next(2)">Choisir mes plats <span class="arrow">→</span></button>
       </div>
-    </div>
+    </section>
 
     <!-- STEP 2 -->
-    <div class="step-panel" id="sp2">
-      <div class="panel-title">🍽️ Quels plats avez-vous commandés ?</div>
-      <p style="font-size:13px;color:var(--gris);margin-bottom:4px">Sélectionnez tous vos plats du repas.</p>
+    <section class="step-panel" id="sp2">
+      <div class="panel-title">
+        <span class="panel-num">02</span>
+        <h2 class="panel-h">Vos <b>plats</b></h2>
+      </div>
+      <p class="panel-desc">Sélectionnez tout ce que vous avez goûté. <span id="sel-count" style="color:var(--rosso);font-style:normal;font-weight:600">0 sélectionné</span></p>
+
       <div id="menu-grid"></div>
+
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="next(1)">← Retour</button>
-        <button class="btn btn-primary" onclick="next(3)">Noter mes plats →</button>
+        <button class="btn btn-primary" onclick="next(3)">Les noter <span class="arrow">→</span></button>
       </div>
-    </div>
+    </section>
 
     <!-- STEP 3 -->
-    <div class="step-panel" id="sp3">
-      <div class="panel-title">⭐ Notez vos plats</div>
+    <section class="step-panel" id="sp3">
+      <div class="panel-title">
+        <span class="panel-num">03</span>
+        <h2 class="panel-h">Vos <b>notes</b></h2>
+      </div>
+      <p class="panel-desc">Glissez sur les étoiles — 1 à 10. Un mot, si vous voulez.</p>
+
       <div id="review-list"></div>
 
-      <div class="field" style="margin-top:8px">
-        <label class="label">Remarque générale <span class="opt">(optionnel)</span></label>
+      <div class="field" style="margin-top:22px">
+        <label class="label">Remarque générale <span class="opt">(facultatif)</span></label>
         <textarea id="f-comment" placeholder="Service, ambiance, suggestions…"></textarea>
       </div>
 
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="next(2)">← Retour</button>
-        <button class="btn btn-primary" onclick="submit()">Envoyer mon avis 🔥</button>
+        <button class="btn btn-primary" onclick="submitForm()">Envoyer mon avis <span class="arrow">→</span></button>
       </div>
-    </div>
+    </section>
   </div>
 
   <!-- SUCCESS -->
   <div id="success">
-    <div class="success-icon">🎉</div>
-    <h2>Merci !</h2>
-    <p>Votre avis a bien été enregistré.<br>À très bientôt chez <strong>Al Forno</strong> !</p>
-    <button class="btn btn-primary" onclick="reset()">Laisser un autre avis</button>
+    <div class="success-mark">✓</div>
+    <h2>Grazie <b>mille</b></h2>
+    <p>Votre avis est bien arrivé en cuisine. À très bientôt chez nous.</p>
+    <button class="btn btn-primary" onclick="reset()">Laisser un autre avis <span class="arrow">↻</span></button>
+    <a class="success-back" href="index.html">← Retour à l'accueil</a>
   </div>
-</div>
+</main>
 
 <script>
 // ── MENU DATA ─────────────────────────────────────────
 const MENU = {
-  "🍕 Pizzas": [
+  "Pizzas": [
     {n:"Marinara",p:"8.90"},{n:"Marguerita",p:"9.90"},{n:"Regina",p:"12.90"},
     {n:"Quattro Fromaggi",p:"12.90"},{n:"Calzone",p:"12.90"},{n:"Napoli",p:"12.90"},
     {n:"Veggie",p:"12.90"},{n:"Pollo",p:"12.90"},{n:"4 Saisons",p:"12.90"},
@@ -347,31 +435,31 @@ const MENU = {
     {n:"Piccante",p:"14.90"},{n:"Al Forno",p:"14.90"},{n:"Tartufo",p:"14.90"},
     {n:"Burrata",p:"14.90"},{n:"Borsalino",p:"14.90"}
   ],
-  "🍝 Pasta": [
+  "Pasta": [
     {n:"Mac N'Cheese",p:"6.90"},{n:"Arrabiata",p:"8.90"},{n:"Quattro Formaggi P.",p:"8.90"},
     {n:"Bolognese",p:"9.90"},{n:"Alfredo",p:"9.90"},{n:"Pesto",p:"9.90"},
     {n:"Carbonara P.",p:"11.90"},{n:"Tartufo P.",p:"11.90"},{n:"Salmone P.",p:"11.90"}
   ],
-  "🥙 Panuozzos": [
+  "Panuozzos": [
     {n:"Italiano",p:"8.90"},{n:"Parigi",p:"9.90"},{n:"Caesar Chicken",p:"10.90"},
     {n:"Americano",p:"10.90"},{n:"Gusto",p:"10.90"},{n:"Pistacchio",p:"10.90"},
     {n:"Marsa",p:"10.90"},{n:"Pastrami",p:"11.90"}
   ],
-  "🧀 Burratas": [
+  "Burratas": [
     {n:"Classica",p:"7.90"},{n:"Pesto B.",p:"8.90"},{n:"Tartufo B.",p:"9.90"}
   ],
-  "🥗 Salades": [
+  "Salades": [
     {n:"Verde",p:"3.90"},{n:"Al Tonno",p:"8.90"},{n:"Caesar",p:"9.90"}
   ],
-  "🫓 À Partager": [
+  "À Partager": [
     {n:"Foccacia",p:"5.90"},{n:"Foccacia Pomodoro",p:"6.90"},
     {n:"Foccacia Tartufo",p:"8.90"},{n:"Cheesy Bread",p:"6.90"}
   ],
-  "🍮 Desserts": [
+  "Desserts": [
     {n:"Tiramisu",p:"3.90"},{n:"Panna Cotta",p:"3.90"},
     {n:"Glace Barattolino",p:"3.90"},{n:"Pizza Nutella",p:"6.90"}
   ],
-  "🥤 Boissons": [
+  "Boissons": [
     {n:"Eau Bouteille",p:"1.50"},{n:"Mole Cola",p:"2.00"},
     {n:"Limonade Sicilienne",p:"3.50"},{n:"Estathe Pesca",p:"2.00"},
     {n:"San Pellegrino Gazeuse",p:"1.80"},{n:"San Pellegrino Boisson",p:"2.00"}
@@ -381,34 +469,46 @@ const MENU = {
 const STORAGE_KEY = 'alforno_v3';
 const selected = new Set();
 let curStep = 1;
+let chosenMoment = '';
 
 // ── BUILD MENU GRID ───────────────────────
 function buildMenu() {
   const wrap = document.getElementById('menu-grid');
   wrap.innerHTML = '';
   for (const [cat, items] of Object.entries(MENU)) {
-    const catClean = cat.replace(/[^\w]/g,'').slice(2);
-    const lbl = document.createElement('div');
-    lbl.className = 'cat-label';
-    lbl.textContent = cat;
-    wrap.appendChild(lbl);
+    const catBlock = document.createElement('div');
+    catBlock.className = 'cat-block';
 
-    const grid = document.createElement('div');
-    grid.className = 'dishes-grid';
+    catBlock.innerHTML = `
+      <div class="cat-label">
+        <span class="cat-name">${cat}</span>
+        <span class="cat-count">${items.length} plats</span>
+      </div>
+      <div class="dishes-grid"></div>`;
+
+    const grid = catBlock.querySelector('.dishes-grid');
     items.forEach(item => {
-      const key = catClean + '::' + item.n;
+      const key = cat + '::' + item.n;
       const card = document.createElement('div');
       card.className = 'dish-card' + (selected.has(key) ? ' sel' : '');
       card.dataset.key = key;
-      card.innerHTML = `<div class="dc-name">${item.n}</div><div class="dc-price">${item.p} €</div>`;
+      card.innerHTML = `<span class="dc-name">${item.n}</span><span class="dc-price">${item.p} €</span>`;
       card.onclick = () => {
         selected.has(key) ? selected.delete(key) : selected.add(key);
         card.classList.toggle('sel');
+        updateSelCount();
       };
       grid.appendChild(card);
     });
-    wrap.appendChild(grid);
+    wrap.appendChild(catBlock);
   }
+}
+
+function updateSelCount(){
+  const el = document.getElementById('sel-count');
+  if (!el) return;
+  const n = selected.size;
+  el.textContent = n + ' sélectionné' + (n>1?'s':'');
 }
 
 // ── BUILD REVIEW CARDS ────────────────────
@@ -422,19 +522,26 @@ function buildReviews() {
     card.className = 'review-card';
     card.dataset.key = key;
     card.innerHTML = `
-      <div class="rc-name">${name}</div>
-      <div class="rc-cat">${cat}</div>
+      <div class="rc-head">
+        <div class="rc-name">${name}</div>
+        <div class="rc-cat">${cat}</div>
+      </div>
       <div class="stars-row">
         <span class="stars-label">Note</span>
         <div class="stars" id="st_${sk}">
-          ${[1,2,3,4,5,6,7,8,9,10].map(i=>`<span class="star" onclick="rate('${sk}',${i})">★</span>`).join('')}
+          ${[1,2,3,4,5,6,7,8,9,10].map(i=>`<span class="star" data-val="${i}">★</span>`).join('')}
         </div>
-        <span class="score-badge" id="sb_${sk}">—</span>
+        <span class="score-badge" id="sb_${sk}">— <span class="denom">/10</span></span>
       </div>
-      <div class="field">
-        <label class="label">Commentaire <span class="opt">(optionnel)</span></label>
+      <div class="field" style="margin:0">
+        <label class="label">Un mot sur ce plat <span class="opt">(facultatif)</span></label>
         <textarea class="dish-txt" placeholder="Avis sur ce plat…" rows="2"></textarea>
       </div>`;
+    // wire stars
+    const starsEl = card.querySelector('#st_'+sk);
+    starsEl.querySelectorAll('.star').forEach(s => {
+      s.onclick = () => rate(sk, parseInt(s.dataset.val));
+    });
     wrap.appendChild(card);
   });
 }
@@ -443,7 +550,7 @@ function rate(sk, val) {
   const el = document.getElementById('st_'+sk);
   el.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('on', i < val));
   el.dataset.val = val;
-  document.getElementById('sb_'+sk).textContent = val+'/10';
+  document.getElementById('sb_'+sk).innerHTML = val+' <span class="denom">/10</span>';
 }
 
 // ── NAVIGATION ────────────────────────────
@@ -465,17 +572,27 @@ function updateProgress() {
     const lbl = document.getElementById('pl'+i);
     dot.classList.remove('active','done');
     lbl.classList.remove('active','done');
+    const numerals = ['1','2','3'];
     if (i < curStep) { dot.classList.add('done'); dot.textContent='✓'; lbl.classList.add('done'); }
-    else if (i === curStep) { dot.classList.add('active'); dot.textContent=i; lbl.classList.add('active'); }
-    else { dot.textContent=i; }
+    else if (i === curStep) { dot.classList.add('active'); dot.textContent=numerals[i-1]; lbl.classList.add('active'); }
+    else { dot.textContent=numerals[i-1]; }
   }
   for (let i=1;i<=2;i++) {
     document.getElementById('pline'+i).classList.toggle('done', i < curStep);
   }
 }
 
+// ── MOMENT CHIPS ──────────────────────────
+document.getElementById('moment-row').addEventListener('click', e => {
+  const c = e.target.closest('.chip');
+  if (!c) return;
+  document.querySelectorAll('#moment-row .chip').forEach(x=>x.classList.remove('sel'));
+  c.classList.add('sel');
+  chosenMoment = c.dataset.val;
+});
+
 // ── SUBMIT ────────────────────────────────
-function submit() {
+function submitForm() {
   const reviews = [];
   let ok = true;
   document.querySelectorAll('#review-list .review-card').forEach(card => {
@@ -493,7 +610,7 @@ function submit() {
     id: Date.now(),
     clientName: document.getElementById('f-name').value.trim() || 'Anonyme',
     visitDate:  document.getElementById('f-date').value || new Date().toISOString().split('T')[0],
-    visitMoment: document.getElementById('f-moment').value || '',
+    visitMoment: chosenMoment,
     generalComment: document.getElementById('f-comment').value.trim(),
     reviews,
     timestamp: new Date().toISOString()
@@ -508,20 +625,24 @@ function submit() {
 // ── RESET ─────────────────────────────────
 function reset() {
   selected.clear();
+  chosenMoment = '';
   document.getElementById('form-wrap').style.display = '';
   document.querySelector('.progress-wrap').style.display = '';
   document.getElementById('success').style.display = 'none';
   document.getElementById('f-name').value = '';
   document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('f-moment').value = '';
+  document.querySelectorAll('#moment-row .chip').forEach(x=>x.classList.remove('sel'));
   document.getElementById('f-comment').value = '';
   curStep = 1;
   next(1);
+  buildMenu();
+  updateSelCount();
 }
 
 // ── INIT ──────────────────────────────────
 document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
 buildMenu();
+updateSelCount();
 </script>
 </body>
 </html>
